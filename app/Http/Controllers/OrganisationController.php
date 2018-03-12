@@ -48,6 +48,7 @@ class OrganisationController extends Controller
         $organisation->postcode = $request->input('postcode');
         $organisation->email = $request->input('email');
         $organisation->telephone = $request->input('telephone');
+        $organisation->user_id = auth()->user->id;
         $organisation->save();
 
         return redirect('/organisations')->with('success', 'Added organisation ' . $organisation->name);
