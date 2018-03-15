@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Organisation;
+use App\IncomeBand;
 
 class OrganisationController extends Controller
 {
@@ -75,7 +76,14 @@ class OrganisationController extends Controller
     public function edit($id)
     {
         $organisation = Organisation::find($id);
-        return view('organisations.edit')->with('organisation',$organisation);
+        $income_bands = IncomeBand::all()->pluck('textual');
+        //$income_band_textual = IncomeBand::find($organisation->income_band)->textual;
+
+
+        return view('organisations.edit')->with([
+            'organisation'=>$organisation,
+            'income_bands'=>$income_bands
+        ]);
     }
 
     /**
@@ -98,6 +106,7 @@ class OrganisationController extends Controller
         $organisation->postcode = $request->input('postcode');
         $organisation->email = $request->input('email');
         $organisation->telephone = $request->input('telephone');
+        $organisation->income_band = $request->input('income_band');
         $organisation->save();
 
         return redirect('/organisations')->with('success', 'Updated organisation ' . $organisation->name);
