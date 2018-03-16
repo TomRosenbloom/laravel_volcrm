@@ -78,7 +78,7 @@ class OrganisationController extends Controller
         $organisation = Organisation::find($id);
         $income_bands = IncomeBand::all()->pluck('textual');
         //$income_band_textual = IncomeBand::find($organisation->income_band)->textual;
-
+        print(IncomeBand::find(6)->organisations);
 
         return view('organisations.edit')->with([
             'organisation'=>$organisation,
@@ -106,7 +106,7 @@ class OrganisationController extends Controller
         $organisation->postcode = $request->input('postcode');
         $organisation->email = $request->input('email');
         $organisation->telephone = $request->input('telephone');
-        $organisation->income_band = $request->input('income_band');
+        $organisation->income_band_id = $request->input('income_band_id');
         $organisation->save();
 
         return redirect('/organisations')->with('success', 'Updated organisation ' . $organisation->name);
