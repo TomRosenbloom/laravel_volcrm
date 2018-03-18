@@ -9,7 +9,7 @@
 
     <h1>Edit organisation</h1>
 
-    {!! Form::open(['action' => ['OrganisationController@update', $organisation->id], 'method' => 'POST']) !!}
+    {!! Form::model($organisation,['action' => ['OrganisationController@update', $organisation->id], 'method' => 'POST']) !!}
         <div class="form-group">
             {{Form::label('name', 'Name')}}
             {{Form::text('name', $organisation->name, ['class'=>'form-control', 'placeholder'=>'Organisation'])}}

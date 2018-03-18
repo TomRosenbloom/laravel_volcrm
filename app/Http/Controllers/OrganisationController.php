@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Organisation;
 use App\IncomeBand;
@@ -27,7 +28,9 @@ class OrganisationController extends Controller
      */
     public function create()
     {
-        return view('organisations.create');
+
+        $income_bands = IncomeBand::all()->pluck('textual');
+        return view('organisations.create')->with('income_bands',$income_bands);
     }
 
     /**
@@ -43,13 +46,16 @@ class OrganisationController extends Controller
             'postcode' => 'required'
         ]);
 
+        $user_id = Auth::id();
+
         $organisation = new Organisation;
         $organisation->name = $request->input('name');
         $organisation->aims_and_activities = $request->input('aims_and_activities');
         $organisation->postcode = $request->input('postcode');
         $organisation->email = $request->input('email');
         $organisation->telephone = $request->input('telephone');
-        $organisation->user_id = auth()->user->id;
+        $organisation->income_band_id = $request->input('income_band_id');
+        $organisation->user_id = $user_id;
         $organisation->save();
 
         return redirect('/organisations')->with('success', 'Added organisation ' . $organisation->name);
@@ -77,8 +83,6 @@ class OrganisationController extends Controller
     {
         $organisation = Organisation::find($id);
         $income_bands = IncomeBand::all()->pluck('textual');
-        //$income_band_textual = IncomeBand::find($organisation->income_band)->textual;
-        print(IncomeBand::find(6)->organisations);
 
         return view('organisations.edit')->with([
             'organisation'=>$organisation,

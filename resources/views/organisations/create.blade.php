@@ -22,17 +22,25 @@
                 'placeholder'=>'Aims and activities'
                 ])}}
         </div>
-        <div class="form-group">
-            {{Form::label('postcode', 'Postcode')}}
-            {{Form::text('postcode', '', ['class'=>'form-control', 'placeholder'=>'Postcode'])}}
+        <div class="form-row">
+            <div class="form-group col-md-2">
+                {{Form::label('postcode', 'Postcode')}}
+                {{Form::text('postcode', '', ['class'=>'form-control', 'placeholder'=>'Postcode'])}}
+            </div>
+            <div class="form-group col-md-4">
+                {{Form::label('telephone', 'Telephone')}}
+                {{Form::text('telephone', '', ['class'=>'form-control', 'placeholder'=>'Telephone'])}}
+            </div>
+            <div class="form-group col-md-4">
+                {{Form::label('email', 'Email')}}
+                {{Form::text('email', '', ['class'=>'form-control', 'placeholder'=>'Email'])}}
+            </div>
         </div>
-        <div class="form-group">
-            {{Form::label('telephone', 'Telephone')}}
-            {{Form::text('telephone', '', ['class'=>'form-control', 'placeholder'=>'Telephone'])}}
-        </div>
-        <div class="form-group">
-            {{Form::label('email', 'Email')}}
-            {{Form::text('email', '', ['class'=>'form-control', 'placeholder'=>'Email'])}}
+        <div class="row form-group">
+            <div class="col-3">
+                {{Form::label('income_band_id', 'Income band')}}
+                {{Form::select('income_band_id', $income_bands, '6', ['class'=>'form-control'])}}
+            </div>
         </div>
         {{Form::submit('Submit', ['class'=>'btn btn-primary'])}}
     {!! Form::close() !!}
