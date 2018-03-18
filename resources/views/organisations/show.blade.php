@@ -52,6 +52,7 @@
                 </dd>
             </dl>
 
+            @if(!Auth::guest())
             <p>
                 <a href="/organisations/{{$organisation->id}}/edit">Edit this organisation</a>
             </p>
@@ -60,7 +61,8 @@
                 {{Form::hidden('_method', 'DELETE')}}
                 {{Form::submit('Delete',['class' => 'btn btn-danger'])}}
             {!!Form::close()!!}
-
+            @endif
+            
         </div>
 
     </div>
