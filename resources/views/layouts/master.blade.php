@@ -20,19 +20,25 @@
   </head>
   <body>
 
-      @include('includes.nav')
+      @include('includes.navbar')
 
       <div role="main" class="container">
+
+          @if(Request::is('/'))
+              @include('includes.showcase')
+          @endif
+
           @include('includes.messages')
+
           <div class="starter-template">
-
-          @yield('mainContent')
-
+              @yield('mainContent')
           </div>
+
       </div>
+
       <!-- Scripts -->
       <script src="{{ asset('js/app.js') }}"></script>
-      
+
       <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
       <script>
           CKEDITOR.replace( 'article-ckeditor', {
