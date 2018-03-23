@@ -41,7 +41,11 @@ class OrganisationController extends Controller
     {
 
         $income_bands = IncomeBand::all()->pluck('textual');
-        return view('organisations.create')->with('income_bands',$income_bands);
+        $organisation = new Organisation; // empty instance to prevent 'non-oject' error in form conditional
+        return view('organisations.create')->with([
+            'organisation'=>$organisation,
+            'income_bands'=>$income_bands
+        ]);
     }
 
     /**
