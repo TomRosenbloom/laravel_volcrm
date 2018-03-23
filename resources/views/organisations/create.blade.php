@@ -10,7 +10,7 @@
     <h1>Add organisation</h1>
 
     {!! Form::open(['action' => 'OrganisationController@store', 'method' => 'POST']) !!}
-        @include('organisations.form')
+        @include('organisations._form')
     {!! Form::close() !!}
 
 @endsection

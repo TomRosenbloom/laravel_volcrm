@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class AddressTypeSeeder extends Seeder
+class AddressTypesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

@@ -10,6 +10,10 @@
         'placeholder'=>'Aims and activities'
         ])}}
 </div>
+<div class="form-group">
+    {{Form::label('line_1', 'Address line one')}}
+    {{Form::text('line_1', $organisation->line_1, ['class'=>'form-control', 'placeholder'=>'First line of address'])}}
+</div>
 <div class="form-row">
     <div class="form-group col-md-2">
         {{Form::label('postcode', 'Postcode')}}
@@ -30,7 +34,7 @@
 
         {{-- how to make just the value conditional? --}}
 
-        @if($organisation->income_band_id))
+        @if($organisation->income_band_id)
             {{Form::select('income_band_id', $income_bands, $organisation->income_band_id, ['class'=>'form-control'])}}
         @else
             {{Form::select('income_band_id', $income_bands, '6', ['class'=>'form-control'])}}

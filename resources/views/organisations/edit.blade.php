@@ -10,7 +10,7 @@
     <h1>Edit organisation</h1>
 
     {!! Form::model($organisation,['action' => ['OrganisationController@update', $organisation->id], 'method' => 'POST']) !!}
-        @include('organisations.form')
+        @include('organisations._form')
         {{Form::hidden('_method','PUT')}}
     {!! Form::close() !!}
 

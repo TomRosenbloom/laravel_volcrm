@@ -8,6 +8,6 @@ class Address extends Model
 {
     public function organisations()
     {
-        return $this->belongsToMany('App\Organisation', 'organisation_address');
+        return $this->belongsToMany('App\Organisation');
     }
 }

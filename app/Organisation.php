@@ -16,7 +16,11 @@ class Organisation extends Model
 
     public function addresses()
     {
-        return $this->belongsToMany('App\Address', 'organisation_address');
+        return $this->belongsToMany('App\Address', 'organisation_addresses')->withPivot('is_default','address_type_id');
     }
 
+    public function getDefaultAddress()
+    {
+        return $this->belongsToMany('App\Address', 'organisation_addresses')->wherePivot('is_default',1);        
+    }
 }
