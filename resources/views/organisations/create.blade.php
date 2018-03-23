@@ -5,7 +5,7 @@
 @endsection
 
 
-@section('mainContent')
+@section('content')
 
     <h1>Add organisation</h1>
 

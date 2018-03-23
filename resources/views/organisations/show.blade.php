@@ -5,7 +5,7 @@
 @endsection
 
 
-@section('mainContent')
+@section('content')
 
     <div class="card" style="margin-top:50px">
 

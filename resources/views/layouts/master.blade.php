@@ -31,7 +31,7 @@
           @include('includes.messages')
 
           <div class="starter-template">
-              @yield('mainContent')
+              @yield('content')
           </div>
 
       </div>

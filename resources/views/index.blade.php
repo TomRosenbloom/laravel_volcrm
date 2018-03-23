@@ -4,7 +4,7 @@
     Laravel
 @stop
 
-@section('mainContent')
+@section('content')
 
 <h1>Resources</h1>
 
