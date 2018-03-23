@@ -14,4 +14,9 @@ class Organisation extends Model
         return $this->belongsTo('App\IncomeBand');
     }
 
+    public function addresses()
+    {
+        return $this->belongsToMany('App\Address', 'organisation_address');
+    }
+
 }

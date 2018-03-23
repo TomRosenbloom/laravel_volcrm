@@ -9,9 +9,11 @@
 
     <h1>Organisations</h1>
 
+    @auth
     <p>
         <a href="/organisations/create">Add organisation</a>
     </p>
+    @endauth
 
     @if(count($organisations) > 0)
         @foreach($organisations as $organisation)
