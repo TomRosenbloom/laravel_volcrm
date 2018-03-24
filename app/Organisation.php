@@ -16,7 +16,7 @@ class Organisation extends Model
 
     public function addresses()
     {
-        return $this->belongsToMany('App\Address', 'organisation_addresses')->withPivot('is_default','address_type_id');
+        return $this->belongsToMany('App\Address', 'organisation_address')->withPivot('is_default','address_type_id');
     }
 
     /**
@@ -28,6 +28,6 @@ class Organisation extends Model
      */
     public function getDefaultAddress()
     {
-        return $this->belongsToMany('App\Address', 'organisation_addresses')->wherePivot('is_default',1)->first();
+        return $this->belongsToMany('App\Address', 'organisation_address')->wherePivot('is_default',1)->first();
     }
 }
