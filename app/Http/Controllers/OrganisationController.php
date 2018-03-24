@@ -132,6 +132,23 @@ class OrganisationController extends Controller
         $organisation->income_band_id = $request->input('income_band_id');
         $organisation->save();
 
+        // this would work if 'city' was made 'fillable'
+        // which means that Laravel sees this as a 'mass assignment'
+        //$organisation->getDefaultAddress()->update(array('city' => $request->input('city')));
+        // [this would be much easier if I had made the rel one-to-one or one-to-many...]
+        //
+        // Currently postcode belongs to org, but should belong to address
+        // That has the potential to be a PITA...
+        // ...will at least need to make a method in Organisation for getting postcode, I think
+
+        $address = $organisation->getDefaultAddress(); // can we guarantee this will be the right one?
+        $address->line_1 = $request->input('line_1');
+        $address->line_2 = $request->input('line_2');
+        $address->city = $request->input('city');
+        $address->postcode = $request->input('postcode');
+
+        $address->save();
+
         return redirect('/organisations')->with('success', 'Updated organisation ' . $organisation->name);
     }
 
