@@ -10,15 +10,24 @@
         'placeholder'=>'Aims and activities'
         ])}}
 </div>
-<div class="form-group">
-    {{Form::label('line_1', 'Address line one')}}
-    {{Form::text('line_1', $organisation->line_1, ['class'=>'form-control', 'placeholder'=>'First line of address'])}}
+<div class="form-row">
+    <div class="form-group col-md-6">
+        {{Form::label('line_1', 'Address line one')}}
+        {{Form::text('line_1', $address->line_1, ['class'=>'form-control', 'placeholder'=>'First line of address'])}}
+    </div>
+</div>
+<div class="form-group col-md-2">
+        {{Form::label('line_2', 'Address line two')}}
+        {{Form::text('line_2', $address->line_2, ['class'=>'form-control', 'placeholder'=>'Second line of address'])}}
 </div>
 <div class="form-row">
     <div class="form-group col-md-2">
         {{Form::label('postcode', 'Postcode')}}
         {{Form::text('postcode', $organisation->postcode, ['class'=>'form-control', 'placeholder'=>'Postcode'])}}
     </div>
+</div>
+
+<div class="form-row">
     <div class="form-group col-md-4">
         {{Form::label('telephone', 'Telephone')}}
         {{Form::text('telephone', $organisation->telephone, ['class'=>'form-control', 'placeholder'=>'Telephone'])}}

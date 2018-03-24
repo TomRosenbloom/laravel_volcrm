@@ -19,8 +19,15 @@ class Organisation extends Model
         return $this->belongsToMany('App\Address', 'organisation_addresses')->withPivot('is_default','address_type_id');
     }
 
+    /**
+     * return the address flagged as default
+     * there should only be one default address (where can I enforce this?), so
+     * using 'first' should work
+     *
+     * @return [type] [description]
+     */
     public function getDefaultAddress()
     {
-        return $this->belongsToMany('App\Address', 'organisation_addresses')->wherePivot('is_default',1);        
+        return $this->belongsToMany('App\Address', 'organisation_addresses')->wherePivot('is_default',1)->first();
     }
 }

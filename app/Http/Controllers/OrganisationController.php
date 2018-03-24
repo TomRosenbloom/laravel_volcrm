@@ -98,17 +98,13 @@ class OrganisationController extends Controller
     {
         $organisation = Organisation::find($id);
 
-        foreach ($organisation->addresses as $address){
-            print($address->line_1);
-            print($address->pivot->is_default);
-        }
-        //print($organisation->addresses->where('is_default', 1));
-        print($organisation->getDefaultAddress()->get());
+        $address = $organisation->getDefaultAddress();
 
         $income_bands = IncomeBand::all()->pluck('textual');
 
         return view('organisations.edit')->with([
             'organisation'=>$organisation,
+            'address'=>$address,
             'income_bands'=>$income_bands
         ]);
     }
