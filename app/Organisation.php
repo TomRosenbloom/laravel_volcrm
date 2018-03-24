@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Address;
 
 class Organisation extends Model
 {
@@ -24,10 +25,14 @@ class Organisation extends Model
      * there should only be one default address (where can I enforce this?), so
      * using 'first' should work
      *
-     * @return [type] [description]
+     * @return Address default address for organisation
      */
     public function getDefaultAddress()
     {
-        return $this->belongsToMany('App\Address', 'organisation_address')->wherePivot('is_default',1)->first();
+        $address = $this->belongsToMany('App\Address', 'organisation_address')->wherePivot('is_default',1)->first();
+        if ($address == ''){
+            $address = new Address;
+        }
+        return $address;
     }
 }

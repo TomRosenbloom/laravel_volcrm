@@ -85,7 +85,11 @@ class OrganisationController extends Controller
     public function show($id)
     {
         $organisation = Organisation::find($id);
-        return view('organisations.show')->with('organisation',$organisation);
+        $address = $organisation->getDefaultAddress();
+        return view('organisations.show')->with([
+            'organisation'=>$organisation,
+            'address'=>$address
+        ]);
     }
 
     /**
@@ -141,11 +145,14 @@ class OrganisationController extends Controller
         // That has the potential to be a PITA...
         // ...will at least need to make a method in Organisation for getting postcode, I think
 
+        // fuck, I've got to update the pivot table as well! No - only in 'store', right?
+
         $address = $organisation->getDefaultAddress(); // can we guarantee this will be the right one?
         $address->line_1 = $request->input('line_1');
         $address->line_2 = $request->input('line_2');
         $address->city = $request->input('city');
         $address->postcode = $request->input('postcode');
+        $address->is_default = 1;
 
         $address->save();
 

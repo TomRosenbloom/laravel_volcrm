@@ -36,7 +36,19 @@
                 Address
                 </dt>
                 <dd class="col-sm-10">
-                {{$organisation->address}}, {{$organisation->postcode}}
+                {{$address->line_1}}
+                </dd>
+                <dt class="col-sm-2">
+                &nbsp;
+                </dt>
+                <dd class="col-sm-10">
+                {{$address->city}}
+                </dd>
+                <dt class="col-sm-2">
+                Postcode
+                </dt>
+                <dd class="col-sm-10">
+                {{$address->postcode}}
                 </dd>
                 <dt class="col-sm-2">
                 Tel.
@@ -62,7 +74,7 @@
                 {{Form::submit('Delete',['class' => 'btn btn-danger'])}}
             {!!Form::close()!!}
             @endif
-            
+
         </div>
 
     </div>
