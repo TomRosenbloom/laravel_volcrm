@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Organisation;
+use App\Address;
 use App\IncomeBand;
 
 class OrganisationController extends Controller
@@ -29,7 +30,16 @@ class OrganisationController extends Controller
     public function index()
     {
         $organisations = Organisation::orderBy('name','asc')->paginate(4);
-        return view('organisations.index')->with('organisations', $organisations);
+
+        session(['paginationPage' => $organisations->currentPage()]);
+        
+        return view('organisations.index')->with([
+            'organisations' => $organisations,
+            'page' => $organisations->currentPage()
+            // ok, but then it needs passing to the show page (and then to the edit page)!
+            // would be easier if the page was worked out in the edit method
+            // that can be done, but the ordering of the results can be an issue
+        ]);
     }
 
     /**
@@ -42,8 +52,10 @@ class OrganisationController extends Controller
 
         $income_bands = IncomeBand::all()->pluck('textual');
         $organisation = new Organisation; // empty instance to prevent 'non-oject' error in form conditional
+        $address = new Address; // ditto
         return view('organisations.create')->with([
             'organisation'=>$organisation,
+            'address'=>$address,
             'income_bands'=>$income_bands
         ]);
     }
@@ -72,6 +84,15 @@ class OrganisationController extends Controller
         $organisation->income_band_id = $request->input('income_band_id');
         $organisation->user_id = $user_id;
         $organisation->save();
+
+        $address = new Address;
+        $address->line_1 = $request->input('line_1');
+        $address->line_2 = $request->input('line_2');
+        $address->city = $request->input('city');
+        $address->postcode = $request->input('postcode');
+        $address->save();
+
+        $organisation->addresses()->attach($address,['is_default' => 1]);
 
         return redirect('/organisations')->with('success', 'Added organisation ' . $organisation->name);
     }
@@ -152,11 +173,13 @@ class OrganisationController extends Controller
         $address->line_2 = $request->input('line_2');
         $address->city = $request->input('city');
         $address->postcode = $request->input('postcode');
-        $address->is_default = 1;
+        //$address->is_default = 1; // error - 'is_default' is in the pivot table
 
         $address->save();
 
-        return redirect('/organisations')->with('success', 'Updated organisation ' . $organisation->name);
+        $page = session('paginationPage');
+
+        return redirect()->route('organisations.index',['page'=>$page])->with('success', 'Updated organisation ' . $organisation->name);
     }
 
     /**
