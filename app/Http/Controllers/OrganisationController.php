@@ -33,7 +33,7 @@ class OrganisationController extends Controller
      */
     public function index(PaginationPageContract $paginationPage)
     {
-        $organisations = Organisation::orderBy('name','asc')->paginate(4);
+        $organisations = Organisation::orderBy('order_name','asc')->paginate(4);
 
         $paginationPage->setPaginationPage($organisations->currentPage());
 
@@ -78,6 +78,7 @@ class OrganisationController extends Controller
 
         $organisation = new Organisation;
         $organisation->name = $request->input('name');
+        $organisation->order_name = $OrgName->definiteArticle($request->input('name'));
         $organisation->aims_and_activities = $request->input('aims_and_activities');
         $organisation->postcode = $request->input('postcode');
         $organisation->email = $request->input('email');
@@ -151,7 +152,7 @@ class OrganisationController extends Controller
 
         $organisation = Organisation::find($id);
         $organisation->name = $request->input('name');
-        print($OrgName->definiteArticle($request->input('name')));
+        $organisation->order_name = $OrgName->definiteArticle($request->input('name'));
         $organisation->aims_and_activities = $request->input('aims_and_activities');
         $organisation->postcode = $request->input('postcode');
         $organisation->email = $request->input('email');

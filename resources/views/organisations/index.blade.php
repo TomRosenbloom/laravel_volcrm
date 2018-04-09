@@ -18,7 +18,7 @@
     @if(count($organisations) > 0)
         @foreach($organisations as $organisation)
             <div class="well">
-                <h3><a href="/organisations/{{$organisation->id}}">{{$organisation->name}}</a></h3>
+                <h3><a href="/organisations/{{$organisation->id}}">{{$organisation->order_name}}</a></h3>
             </div>
         @endforeach
         {{$organisations->links()}}
