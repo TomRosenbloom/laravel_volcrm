@@ -9,6 +9,8 @@ use App\Organisation;
 use App\Address;
 use App\IncomeBand;
 
+use App\Helpers\Contracts\PaginationPageContract;
+
 class OrganisationController extends Controller
 {
 
@@ -22,23 +24,21 @@ class OrganisationController extends Controller
         $this->middleware('auth', ['except' => ['index', 'show']]);
     }
 
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(PaginationPageContract $paginationPage)
     {
         $organisations = Organisation::orderBy('name','asc')->paginate(4);
 
-        session(['paginationPage' => $organisations->currentPage()]);
-        
+        $paginationPage->setPaginationPage($organisations->currentPage());
+
         return view('organisations.index')->with([
             'organisations' => $organisations,
             'page' => $organisations->currentPage()
-            // ok, but then it needs passing to the show page (and then to the edit page)!
-            // would be easier if the page was worked out in the edit method
-            // that can be done, but the ordering of the results can be an issue
         ]);
     }
 
@@ -141,7 +141,7 @@ class OrganisationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, PaginationPageContract $paginationPage)
     {
         $this->validate($request, [
             'name' => 'required',
@@ -157,27 +157,19 @@ class OrganisationController extends Controller
         $organisation->income_band_id = $request->input('income_band_id');
         $organisation->save();
 
-        // this would work if 'city' was made 'fillable'
-        // which means that Laravel sees this as a 'mass assignment'
-        //$organisation->getDefaultAddress()->update(array('city' => $request->input('city')));
-        // [this would be much easier if I had made the rel one-to-one or one-to-many...]
-        //
-        // Currently postcode belongs to org, but should belong to address
-        // That has the potential to be a PITA...
-        // ...will at least need to make a method in Organisation for getting postcode, I think
-
-        // fuck, I've got to update the pivot table as well! No - only in 'store', right?
-
-        $address = $organisation->getDefaultAddress(); // can we guarantee this will be the right one?
+        $address = $organisation->getDefaultAddress(); // can we *guarantee* this will be the right one?
         $address->line_1 = $request->input('line_1');
         $address->line_2 = $request->input('line_2');
         $address->city = $request->input('city');
         $address->postcode = $request->input('postcode');
         //$address->is_default = 1; // error - 'is_default' is in the pivot table
+        //as the system currently works, we are only taking one, = default, address
+        //so don't need to worry about this for now as is_default will have been set
+        //when the org was added
 
         $address->save();
 
-        $page = session('paginationPage');
+        $page = $paginationPage->getPaginationPage();
 
         return redirect()->route('organisations.index',['page'=>$page])->with('success', 'Updated organisation ' . $organisation->name);
     }

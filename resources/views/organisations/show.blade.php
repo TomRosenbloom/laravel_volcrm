@@ -69,7 +69,7 @@
                 <a href="/organisations/{{$organisation->id}}/edit">Edit this organisation</a>
             </p>
 
-            {!!Form::open(['action' => ['OrganisationController@destroy', $organisation->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
+            {!!Form::open(['action' => ['OrganisationController@destroy', $organisation->id], 'method' => 'POST', 'class' => 'pull-right', 'onsubmit' => 'return confirm("Really delete?")'])!!}
                 {{Form::hidden('_method', 'DELETE')}}
                 {{Form::submit('Delete',['class' => 'btn btn-danger'])}}
             {!!Form::close()!!}
