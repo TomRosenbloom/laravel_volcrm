@@ -10,6 +10,7 @@ use App\Address;
 use App\IncomeBand;
 
 use App\Helpers\Contracts\PaginationPageContract;
+use App\Helpers\OrgName;
 
 class OrganisationController extends Controller
 {
@@ -66,7 +67,7 @@ class OrganisationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, OrgName $orgname)
     {
         $this->validate($request, [
             'name' => 'required',
@@ -141,7 +142,7 @@ class OrganisationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id, PaginationPageContract $paginationPage)
+    public function update(Request $request, $id, PaginationPageContract $paginationPage, OrgName $OrgName)
     {
         $this->validate($request, [
             'name' => 'required',
@@ -150,6 +151,7 @@ class OrganisationController extends Controller
 
         $organisation = Organisation::find($id);
         $organisation->name = $request->input('name');
+        print($OrgName->definiteArticle($request->input('name')));
         $organisation->aims_and_activities = $request->input('aims_and_activities');
         $organisation->postcode = $request->input('postcode');
         $organisation->email = $request->input('email');
