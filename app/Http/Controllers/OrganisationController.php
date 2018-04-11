@@ -15,6 +15,9 @@ use App\Helpers\OrgName;
 
 class OrganisationController extends Controller
 {
+    private $resultsPerPage = 4;
+    private $numResults;
+    private $numPages;
 
     /**
      * Create a new controller instance.
@@ -24,6 +27,9 @@ class OrganisationController extends Controller
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
+
+        $this->numResults = Organisation::count();
+        $this->numPages = round($this->numResults/$this->resultsPerPage);
     }
 
 
@@ -34,7 +40,7 @@ class OrganisationController extends Controller
      */
     public function index(PaginationPageContract $paginationPage)
     {
-        $organisations = Organisation::orderBy('order_name','asc')->paginate(4);
+        $organisations = Organisation::orderBy('order_name','asc')->paginate($this->resultsPerPage);
 
         $paginationPage->setPaginationPage($organisations->currentPage());
 
@@ -197,10 +203,23 @@ class OrganisationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, PaginationPageContract $paginationPage)
     {
         $organisation = Organisation::find($id);
         $organisation->delete();
-        return redirect('/organisations')->with('success', 'Deleted organisation ' . $organisation->name);
+
+        // to return to the pagination page where the item was located,
+        // get the page we came from, which will have been set in the index page
+        // (that assumes we got here from the index page...)
+        // return to that page unless the deletion has reduced the number of pages
+        // so maybe, if page doesn't exist, go to the last page?
+        $page = $paginationPage->getPaginationPage();
+        if($page > $this->numPages){
+            $page = $this->numPages;
+        }
+
+        //return redirect('/organisations')->with('success', 'Deleted organisation ' . $organisation->name);
+        return redirect()->route('organisations.index',['page'=>$page])->with('success', 'Deleted organisation ' . $organisation->name);
+
     }
 }
