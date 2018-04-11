@@ -56,4 +56,30 @@
         @endif
     </div>
 </div>
+
+
+<fieldset class="form-group">
+    <legend>
+        Organisation type
+    </legend>
+    @foreach($organisation_types as $organisation_type)
+        <div class="form-row">
+            <div class="form-check col-6">
+                {{Form::checkbox('organisation_type['.$organisation_type->id.'][id]',
+                $organisation_type->id,
+                null,
+                ['class'=>'form-check-input', 'id'=>'type'.$organisation_type->id])}}
+                <label class="form-check-label" for="type{{$organisation_type->id}}">
+                  {{$organisation_type->name}}
+                </label>
+            </div>
+            <div class="col-3">
+                {{Form::text('organisation_type['.$organisation_type->id.'][reg_num]', null, ['class'=>'form-control', 'placeholder'=>'Number'])}}
+            </div>
+        </div>
+    @endforeach
+</fieldset>
+
+
+
 {{Form::submit('Submit', ['class'=>'btn btn-primary'])}}

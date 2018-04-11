@@ -15,6 +15,11 @@ class Organisation extends Model
         return $this->belongsTo('App\IncomeBand');
     }
 
+    // organisation can have more than one type (with optional associated reg number)
+    public function organisation_types(){
+        return $this->belongsToMany('App\OrganisationType', 'organisation_type');
+    }
+
     public function addresses()
     {
         return $this->belongsToMany('App\Address', 'organisation_address')->withPivot('is_default','address_type_id');
