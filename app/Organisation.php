@@ -17,7 +17,7 @@ class Organisation extends Model
 
     // organisation can have more than one type (with optional associated reg number)
     public function organisation_types(){
-        return $this->belongsToMany('App\OrganisationType', 'organisation_type');
+        return $this->belongsToMany('App\OrganisationType', 'organisation_type')->withPivot('reg_num');
     }
 
     public function addresses()

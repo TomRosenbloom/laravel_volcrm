@@ -112,7 +112,6 @@ class OrganisationController extends Controller
                 $attach_data[$orgtype['id']] = array('reg_num'=>$orgtype['reg_num']);
             }
         }
-
         $organisation->organisation_types()->attach($attach_data);
 
         return redirect('/organisations')->with('success', 'Added organisation ' . $organisation->name);
@@ -148,13 +147,23 @@ class OrganisationController extends Controller
 
         $income_bands = IncomeBand::all()->pluck('textual');
 
-        $organisation_types = OrganisationType::all()->pluck('name');
+        $organisation_types = OrganisationType::all();
+
+        $this_org_types = $organisation->organisation_types()->get();
+
+        // print($this_org_types); echo "<br />";
+        // print($this_org_types->first()->pivot); echo "<br />";
+        // print($this_org_types->contains('id','2')); echo "<br />";
+        // print($this_org_types->where('id',2)->pluck('pivot')->pluck('reg_num'));
+
+        //echo "<pre>"; var_dump($this_org_types); echo "</pre>";
 
         return view('organisations.edit')->with([
             'organisation'=>$organisation,
             'address'=>$address,
             'income_bands'=>$income_bands,
             'organisation_types'=>$organisation_types,
+            'this_org_types'=>$this_org_types
         ]);
     }
 
@@ -180,7 +189,6 @@ class OrganisationController extends Controller
         $organisation->email = $request->input('email');
         $organisation->telephone = $request->input('telephone');
         $organisation->income_band_id = $request->input('income_band_id');
-        //$organisation->organisation_type_id = $request->input('organisation_type_id');
         $organisation->save();
 
         $address = $organisation->getDefaultAddress(); // can we *guarantee* this will be the right one?
@@ -189,8 +197,15 @@ class OrganisationController extends Controller
         $address->city = $request->input('city');
         $address->postcode = $request->input('postcode');
 
-
         $address->save();
+
+        $sync_data = [];
+        foreach($request->input('organisation_type') as $orgtype){
+            if(isset($orgtype['id'])){
+                $sync_data[$orgtype['id']] = array('reg_num'=>$orgtype['reg_num']);
+            }
+        }
+        $organisation->organisation_types()->sync($sync_data);
 
         $page = $paginationPage->getPaginationPage();
 

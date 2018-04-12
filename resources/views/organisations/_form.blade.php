@@ -46,14 +46,8 @@
 <div class="row form-group">
     <div class="col-3">
         {{Form::label('income_band_id', 'Income band')}}
+        {{Form::select('income_band_id', $income_bands, (empty($organisation->income_band_id) ? '6' : $organisation->income_band_id), ['class'=>'form-control'])}}
 
-        {{-- how to make just the value conditional? --}}
-
-        @if($organisation->income_band_id)
-            {{Form::select('income_band_id', $income_bands, $organisation->income_band_id, ['class'=>'form-control'])}}
-        @else
-            {{Form::select('income_band_id', $income_bands, '6', ['class'=>'form-control'])}}
-        @endif
     </div>
 </div>
 
@@ -67,14 +61,18 @@
             <div class="form-check col-6">
                 {{Form::checkbox('organisation_type['.$organisation_type->id.'][id]',
                 $organisation_type->id,
-                null,
+                ($this_org_types->contains('id', $organisation_type->id) ? 1 : null),
                 ['class'=>'form-check-input', 'id'=>'type'.$organisation_type->id])}}
                 <label class="form-check-label" for="type{{$organisation_type->id}}">
                   {{$organisation_type->name}}
                 </label>
             </div>
             <div class="col-3">
-                {{Form::text('organisation_type['.$organisation_type->id.'][reg_num]', null, ['class'=>'form-control', 'placeholder'=>'Number'])}}
+                {{Form::text(
+                    'organisation_type['.$organisation_type->id.'][reg_num]',
+                    $this_org_types->where('id',$organisation_type->id)->pluck('pivot')->pluck('reg_num')->first(),
+                    ['class'=>'form-control', 'placeholder'=>'Number']
+                )}}
             </div>
         </div>
     @endforeach
