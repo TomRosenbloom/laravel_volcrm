@@ -64,15 +64,45 @@
                 </dd>
             </dl>
 
-            @if(!Auth::guest())
-            <p>
-                <a href="/organisations/{{$organisation->id}}/edit">Edit this organisation</a>
-            </p>
+<div class="form-row mb-3">
+    <div class="col-4">
+        <a data-toggle="collapse" class="collapsed text-secondary" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+          <i class="fa" aria-hidden="true"></i>
+          <span>
+              More
+          </span>
+        </a>
+    </div>
 
-            {!!Form::open(['action' => ['OrganisationController@destroy', $organisation->id], 'method' => 'POST', 'class' => 'pull-right', 'onsubmit' => 'return confirm("Really delete?")'])!!}
-                {{Form::hidden('_method', 'DELETE')}}
-                {{Form::submit('Delete',['class' => 'btn btn-danger'])}}
-            {!!Form::close()!!}
+</div>
+
+
+            <div class="collapse" id="collapseExample">
+                <dl class="row" id="more">
+                    <dt class="col-sm-2">Income</dt>
+                    <dd class="col-sm-10">
+                        {!!$organisation->income_band->textual!!}
+                    </dd>
+                </dl>
+            </div>
+
+            @if(!Auth::guest())
+
+            <div class="form-row">
+                <div class="col-1">
+                    {!!Form::open(['action' => ['OrganisationController@edit', $organisation->id], 'method' => 'GET'])!!}
+                        {{Form::submit('Edit',['class' => 'btn btn-primary btn-block'])}}
+                    {!!Form::close()!!}
+                </div>
+
+                <div class="col-1">
+                    {!!Form::open(['action' => ['OrganisationController@destroy', $organisation->id], 'method' => 'POST', 'onsubmit' => 'return confirm("Really delete?")'])!!}
+                        {{Form::hidden('_method', 'DELETE')}}
+                        {{Form::submit('Delete',['class' => 'btn btn-danger'])}}
+                    {!!Form::close()!!}
+                </div>
+            </div>
+
             @endif
 
         </div>
