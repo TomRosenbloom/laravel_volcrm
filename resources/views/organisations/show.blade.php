@@ -65,10 +65,16 @@
             </dl>
 
             <div class="collapse" id="collapseExample">
-                <dl class="row" id="more">
+                <dl class="row">
                     <dt class="col-sm-2">Income</dt>
                     <dd class="col-sm-10">
                         {!!$organisation->income_band->textual!!}
+                    </dd>
+                    <dt class="col-sm-2">Type(s)</dt>
+                    <dd class="col-sm-10">
+                        @foreach($organisation->organisation_types as $type)
+                            {{$type->name}} {{$type->pivot->reg_num}}<br />
+                        @endforeach
                     </dd>
                 </dl>
             </div>
@@ -79,7 +85,7 @@
                     <a data-toggle="collapse" class="collapsed text-secondary" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                       <i class="fa" aria-hidden="true"></i>
                       <span>
-                          
+
                       </span>
                     </a>
                 </div>

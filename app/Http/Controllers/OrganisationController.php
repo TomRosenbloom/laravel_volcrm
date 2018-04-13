@@ -127,6 +127,7 @@ class OrganisationController extends Controller
     {
         $organisation = Organisation::find($id);
         $address = $organisation->getDefaultAddress();
+
         return view('organisations.show')->with([
             'organisation'=>$organisation,
             'address'=>$address
@@ -150,13 +151,6 @@ class OrganisationController extends Controller
         $organisation_types = OrganisationType::all();
 
         $this_org_types = $organisation->organisation_types()->get();
-
-        // print($this_org_types); echo "<br />";
-        // print($this_org_types->first()->pivot); echo "<br />";
-        // print($this_org_types->contains('id','2')); echo "<br />";
-        // print($this_org_types->where('id',2)->pluck('pivot')->pluck('reg_num'));
-
-        //echo "<pre>"; var_dump($this_org_types); echo "</pre>";
 
         return view('organisations.edit')->with([
             'organisation'=>$organisation,
