@@ -13068,6 +13068,14 @@ a.text-dark:focus {
   content: "\F13A";
 }
 
+[data-toggle="collapse"].collapsed span::after {
+  content: 'More details';
+}
+
+[data-toggle="collapse"] span::after {
+  content: 'Less details';
+}
+
 @media screen and (min-width: 960px) {
   html {
     margin-left: calc(100vw - 100%);

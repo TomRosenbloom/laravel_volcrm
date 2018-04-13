@@ -2,14 +2,21 @@
   margin-bottom: 30px;
 }
 
+
 [data-toggle="collapse"] .fa:before {
   content: "\f139";
 }
-
 [data-toggle="collapse"].collapsed .fa:before {
   content: "\f13a";
 }
+[data-toggle="collapse"].collapsed span::after {
+  content: 'More details';
+}
+[data-toggle="collapse"] span::after {
+  content: 'Less details';
+}
 
+// prevent scrollbar jump
 @media screen and (min-width: 960px) {
     html {
         margin-left: calc(100vw - 100%);

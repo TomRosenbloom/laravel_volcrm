@@ -64,19 +64,6 @@
                 </dd>
             </dl>
 
-<div class="form-row mb-3">
-    <div class="col-4">
-        <a data-toggle="collapse" class="collapsed text-secondary" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-          <i class="fa" aria-hidden="true"></i>
-          <span>
-              More
-          </span>
-        </a>
-    </div>
-
-</div>
-
-
             <div class="collapse" id="collapseExample">
                 <dl class="row" id="more">
                     <dt class="col-sm-2">Income</dt>
@@ -85,6 +72,19 @@
                     </dd>
                 </dl>
             </div>
+
+
+            <div class="form-row mb-3">
+                <div class="col-4">
+                    <a data-toggle="collapse" class="collapsed text-secondary" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                      <i class="fa" aria-hidden="true"></i>
+                      <span>
+                          
+                      </span>
+                    </a>
+                </div>
+            </div>
+
 
             @if(!Auth::guest())
 
