@@ -38,15 +38,20 @@ class OrganisationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(PaginationPageContract $paginationPage)
+    public function index(Request $request, PaginationPageContract $paginationPage)
     {
+        if($request->input('num_items') !== null){
+            $this->resultsPerPage = $request->input('num_items');
+        }
+
         $organisations = Organisation::orderBy('order_name','asc')->paginate($this->resultsPerPage);
 
         $paginationPage->setPaginationPage($organisations->currentPage());
 
         return view('organisations.index')->with([
             'organisations' => $organisations,
-            'page' => $organisations->currentPage()
+            'page' => $organisations->currentPage(),
+            'num_items' => $this->resultsPerPage
         ]);
     }
 

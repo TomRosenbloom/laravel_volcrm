@@ -17,6 +17,7 @@
 }
 
 // prevent scrollbar jump
+// there is a problem with this: it snips off the lh end of the nav bar
 @media screen and (min-width: 960px) {
     html {
         margin-left: calc(100vw - 100%);
