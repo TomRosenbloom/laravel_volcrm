@@ -61,7 +61,7 @@ class OrganisationController extends Controller
         $income_bands = IncomeBand::all()->pluck('textual');
         $organisation_types = OrganisationType::all();
         $organisation = new Organisation; // empty instance to prevent 'non-oject' error in form conditional
-        $address = new Address; // ditto
+        $address = new Address; // ditto. NB you can do conditionals in the form, but that is a serious PITA
         return view('organisations.create')->with([
             'organisation'=>$organisation,
             'address'=>$address,
