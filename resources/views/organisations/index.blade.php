@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@push('scripts')
+<script src="js/orgindex.js"></script>
+@endpush
+
 @section('title')
     List of organisations
 @endsection
@@ -37,7 +41,7 @@
         @if(Request::get('search_terms'))
             @include('includes.algolia')
         @endif
-        
+
     @else
         <p>
             No organisations found
