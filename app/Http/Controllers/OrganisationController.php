@@ -38,20 +38,26 @@ class OrganisationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, PaginationPageContract $paginationPage)
+    public function index(Request $request, PaginationPageContract $paginationPageContract)
     {
-        if($request->input('num_items') !== null){
+        if($request->input('num_items') !== null){ // a conditional - that's a bad sign!
             $this->resultsPerPage = $request->input('num_items');
         }
 
-        $organisations = Organisation::orderBy('order_name','asc')->paginate($this->resultsPerPage);
+        if($request->input('search_terms')){
+            $organisations = Organisation::search($request->input('search_terms'))->paginate($this->resultsPerPage);
+        } else {
+            $organisations = Organisation::orderBy('order_name','asc')->paginate($this->resultsPerPage);
+        }
 
-        $paginationPage->setPaginationPage($organisations->currentPage());
+
+        $paginationPageContract->setPaginationPage($organisations->currentPage());
 
         return view('organisations.index')->with([
             'organisations' => $organisations,
             'page' => $organisations->currentPage(),
-            'num_items' => $this->resultsPerPage
+            'num_items' => $this->resultsPerPage,
+            'search_terms' => ''
         ]);
     }
 
