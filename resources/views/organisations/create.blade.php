@@ -14,3 +14,12 @@
     {!! Form::close() !!}
 
 @endsection
+
+@section('scripts')
+<script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace( 'article-ckeditor', {
+        customConfig: '/vendor/unisharp/laravel-ckeditor/my_config.js'
+    });
+</script>
+@endsection

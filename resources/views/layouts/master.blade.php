@@ -39,14 +39,9 @@
       <!-- Scripts -->
       <script src="{{ asset('js/app.js') }}"></script>
 
-      <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
-      <script>
-          CKEDITOR.replace( 'article-ckeditor', {
-              customConfig: '/vendor/unisharp/laravel-ckeditor/my_config.js'
-          });
-      </script>
-
       @stack('scripts')
+
+      @yield('scripts')
 
 </body>
 </html>
