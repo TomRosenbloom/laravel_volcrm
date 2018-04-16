@@ -23,11 +23,15 @@
     position: absolute;
     top: 0;
     right: 0;
-    padding: 8px;
+    padding: 12px;
     color: lightgrey;
     z-index: 10;
     pointer-events: auto;
     cursor: pointer;
+}
+
+.search-input {
+    box-shadow: none;
 }
 
 @endsection
@@ -42,22 +46,33 @@
     </p>
     @endauth
 
-    {!! Form::open(['action' => 'OrganisationController@index', 'method' => 'GET', 'class' => 'form-inline mb-2']) !!}
-        {{Form::label('num_items', 'Show')}}
-        {{Form::Select('num_items', [4=>4,6=>6,10=>10,50=>50], $num_items, ['class'=>'form-control-sm ml-1 mr-1'])}}
-        {{Form::label('search_terms', 'Search')}}
-        <div class="search-container">
-            {{Form::text('search_terms', $search_terms, ['class'=>'form-control-sm ml-1 search-input', 'placeholder'=>'Enter text here'])}}
-            <span class="form-control-clear fa fa-times-circle fa-lg hidden"></span>
-        </div>
-        {{Form::submit('Go', ['class'=>'btn btn-outline-primary btn-sm ml-1'])}}
-    {!! Form::close() !!}
+    <div class="card w-75">
+        <div class="card-body">
 
+            {!! Form::open(['action' => 'OrganisationController@index', 'method' => 'GET', 'class' => 'form-inline']) !!}
+
+            <div class="input-group mr-2">
+                <div class="search-container">
+                    {{Form::text('search_terms', $search_terms, ['class'=>'form-control search-input', 'placeholder'=>'Enter search text here'])}}
+                    <span class="form-control-clear fa fa-times-circle fa-lg hidden"></span>
+                </div>
+                <div class="input-group-append">
+                    <button class="btn btn-secondary" type="submit">Search</button>
+                </div>
+            </div>
+
+            {{Form::label('num_items', 'Show')}}
+            {{Form::Select('num_items', [4=>4,6=>6,10=>10,50=>50], $num_items, ['class'=>'form-control ml-1 mr-1'])}}
+
+            {!! Form::close() !!}
+
+        </div>
+    </div>
 
     @if(count($organisations) > 0)
 
         @foreach($organisations as $organisation)
-            <div class="well">
+            <div class="mt-3">
                 <h3><a href="/organisations/{{$organisation->id}}">{{$organisation->order_name}}</a></h3>
             </div>
         @endforeach
