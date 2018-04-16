@@ -9,6 +9,5 @@ $('.search-input').on('input propertychange', function() {
 }).trigger('propertychange');
 
 $('.form-control-clear').click(function() {
-  $(this).siblings('input[type="text"]').val('')
-    .trigger('propertychange').focus();
+  $(this).siblings('input[type="text"]').val('').closest('form').submit();
 });
