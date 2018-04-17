@@ -1,14 +1,18 @@
-<div class="form-group">
-    {{Form::label('name', 'Name')}}
-    {{Form::text('name', $organisation->name, ['class'=>'form-control', 'placeholder'=>'Organisation'])}}
+<div class="form-row">
+    <div class="form-group col-md-8">
+        {{Form::label('name', 'Name')}}
+        {{Form::text('name', $organisation->name, ['class'=>'form-control', 'placeholder'=>'Organisation', 'autocomplete' => 'no'])}}
+    </div>
 </div>
-<div class="form-group">
-    {{Form::label('aims_and_activities', 'Aims and activities')}}
-    {{Form::textarea('aims_and_activities', $organisation->aims_and_activities, [
-        'id'=>'article-ckeditor',
-        'class'=>'form-control',
-        'placeholder'=>'Aims and activities'
-        ])}}
+<div class="form-row">
+    <div class="form-group col-md-8">
+        {{Form::label('aims_and_activities', 'Aims and activities')}}
+        {{Form::textarea('aims_and_activities', $organisation->aims_and_activities, [
+            'id'=>'article-ckeditor',
+            'class'=>'form-control',
+            'placeholder'=>'Aims and activities'
+            ])}}
+    </div>
 </div>
 <div class="form-row">
     <div class="form-group col-md-6">

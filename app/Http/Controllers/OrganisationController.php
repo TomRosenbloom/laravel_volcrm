@@ -61,6 +61,30 @@ class OrganisationController extends Controller
         ]);
     }
 
+
+    /**
+     * Return list of search results, for ajax live search
+     *
+     * @param  Request $request [description]
+     * @return string           [description]
+     */
+    public function liveSearch(Request $request)
+    {
+        $output = '<h1>Possible matches</h1>';
+
+        if($request->search_terms) {
+            $organisations = Organisation::search($request->search_terms)->get();
+            foreach($organisations as $organisation) {
+                $output .= '<p><a href="">' . $organisation->name . '</a></p>';
+            }
+        } else {
+            $output = "didn't find nothing";
+        }
+
+        return Response($output);
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *

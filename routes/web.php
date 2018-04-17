@@ -5,7 +5,9 @@ Route::get('/', function () {
 });
 
 Route::resource('organisations', 'OrganisationController');
-//Route::get('organisations/{id}/page/{page}', 'OrganisationController@show');
+
+// this should really be in API routes...?
+Route::get('organisation_search/{search_terms}', 'OrganisationController@liveSearch');
 
 Auth::routes();
 
