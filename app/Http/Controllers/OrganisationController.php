@@ -13,6 +13,9 @@ use App\OrganisationType;
 use App\Helpers\Contracts\PaginationPageContract;
 use App\Helpers\OrgName;
 
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
+
 class OrganisationController extends Controller
 {
     private $resultsPerPage = 4;
@@ -82,6 +85,26 @@ class OrganisationController extends Controller
         }
 
         return Response($output);
+    }
+
+
+    public function ccImport()
+    {
+        // come back to this when I get the API key
+
+        $client = new Client();
+        $res = $client->request('POST', 'https://url_to_the_api', [
+            'form_params' => [
+                'client_id' => 'test_id',
+                'secret' => 'test_secret',
+            ]
+        ]);
+        echo $res->getStatusCode();
+        // "200"
+        echo $res->getHeader('content-type');
+        // 'application/json; charset=utf8'
+        echo $res->getBody();
+        // {"type":"User"...'
     }
 
 
