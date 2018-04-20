@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Routing\UrlGenerator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,9 +13,17 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(UrlGenerator $url)
     {
         Schema::defaultStringLength(191);
+
+        // prevent mixed content warnings in live deployment
+        // (when you use resources/assets, because the generated links are http not https)
+        if(env('APP_ENV') !== 'local')
+        {
+            $url->forceSchema('https');
+        }
+
     }
 
     /**
