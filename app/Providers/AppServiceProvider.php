@@ -18,10 +18,9 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         // prevent mixed content warnings in live deployment
-        // (when you use resources/assets, because the generated links are http not https)
         if(env('APP_ENV') !== 'local')
         {
-            $url->forceSchema('https');
+            $url->forceScheme('https');
         }
 
     }
