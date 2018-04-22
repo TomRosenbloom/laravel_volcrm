@@ -170,11 +170,7 @@ class OrganisationController extends Controller
                 $attach_data[$orgtype['id']] = array('reg_num'=>$orgtype['reg_num']);
             }
         }
-        try {
-            $organisation->organisation_types()->attach($attach_data);
-        } catch (Exception $e){
-            echo 'Exception ', $e->getMessage();
-        }
+        $organisation->organisation_types()->attach($attach_data);
 
         return redirect('/organisations')->with('success', 'Added organisation ' . $organisation->name);
     }
@@ -261,15 +257,11 @@ class OrganisationController extends Controller
                 $sync_data[$orgtype['id']] = array('reg_num'=>$orgtype['reg_num']);
             }
         }
-        try {
-            $organisation->organisation_types()->sync($sync_data);
-        } catch (Exception $e){
-            echo 'Exception ', $e->getMessage();
-        }
+        $organisation->organisation_types()->sync($sync_data);
 
         $page = $paginationPage->getPaginationPage();
 
-        //return redirect()->route('organisations.index',['page'=>$page])->with('success', 'Updated organisation ' . $organisation->name);
+        return redirect()->route('organisations.index',['page'=>$page])->with('success', 'Updated organisation ' . $organisation->name);
     }
 
     /**
