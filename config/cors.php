@@ -13,7 +13,7 @@ return [
     */
 
     'supportsCredentials' => false,
-    'allowedOrigins' => ['http://volcrm.herokuapp.com'],
+    'allowedOrigins' => ['http://volcrm.herokuapp.com','https://volcrm.herokuapp.com'],
     'allowedOriginsPatterns' => [],
     'allowedHeaders' => ['*'],
     'allowedMethods' => ['*'],
