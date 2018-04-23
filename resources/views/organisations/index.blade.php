@@ -73,7 +73,7 @@
 
         @foreach($organisations as $organisation)
             <div class="mt-3">
-                <h3><a href="/organisations/{{$organisation->id}}">{{$organisation->order_name}}</a></h3>
+                <h3><a href="{{ url('/organisations/' . $organisation->id) }}">{{$organisation->order_name}}</a></h3>
             </div>
         @endforeach
 

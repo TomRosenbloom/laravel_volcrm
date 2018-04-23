@@ -8,6 +8,6 @@
 
 <h1>Resources</h1>
 
-<p><a href="/organisations/">Organisations</a></p>
+<p><a href="{{ url('organisations') }}">Organisations</a></p>
 
 @stop
