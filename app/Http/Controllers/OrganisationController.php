@@ -47,7 +47,7 @@ class OrganisationController extends Controller
             $this->resultsPerPage = $request->input('num_items');
         }
 
-        if($request->input('search_terms')){
+        if($request->input('search_terms')){ // another one!
             $organisations = Organisation::search($request->input('search_terms'))->paginate($this->resultsPerPage);
         } else {
             $organisations = Organisation::orderBy('order_name','asc')->paginate($this->resultsPerPage);
@@ -73,13 +73,15 @@ class OrganisationController extends Controller
      */
     public function liveSearch(Request $request)
     {
-        $output = '<h1>Possible matches</h1>';
+        $output = '';
 
         if($request->search_terms) {
+            $output .= '';
             $organisations = Organisation::search($request->search_terms)->get();
             foreach($organisations as $organisation) {
                 $output .= '<p><a href="">' . $organisation->name . '</a></p>';
             }
+            $output .= '';
         } else {
             $output = "didn't find nothing";
         }

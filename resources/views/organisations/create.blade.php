@@ -5,12 +5,17 @@
 @endsection
 
 @section('styles')
-    #result h1 {
-        font-size: 1.6em;
+    #name-input {
+        position: relative;
     }
-    #result {
-        margin-left: -500px; <!-- horror bodge -->
-
+    #matches {
+        position: absolute;
+        z-index: 999;
+        background-color: white;
+        padding: 0 10px 0 10px;
+        margin: 0 0 0 1px;
+        border: 1px solid #ced4da;
+        width: 500px;
     }
 @endsection
 
@@ -24,10 +29,7 @@
                 @include('organisations._form')
             {!! Form::close() !!}
         </div>
-        <div class="float-left">
-            <div id="result" class="position-absolute bg-white p-2 border w-25">
-            </div>
-        </div>
+
     </div>
 
 @endsection
@@ -41,7 +43,7 @@
 </script>
 <script>
     $(document).ready(function(){
-        $('#result').hide();
+        $('#matches').hide();
         $('#name').keyup(function(){
             var searchTerms = $(this).val();
             if(searchTerms != ''){
@@ -54,15 +56,16 @@
                     type: 'GET',
                     success: function(response) {
                         if(response != '') {
-                            $('#result').html(response).show();
-                            // $('#name').after("<div><p>Test</p></div>");
+                            $('#matches').html(response).show();  // hmm...
+                                                           // Plus, need to make this float over the rest of the form
+                                                           // rather than pushing it down
                         } else {
-                            $('#result').html('').hide();
+                            $('#matches').hide();
                         }
                     }
                 });
             } else {
-                $('#result').hide();
+                $('#matches').hide();
             }
         });
     });
