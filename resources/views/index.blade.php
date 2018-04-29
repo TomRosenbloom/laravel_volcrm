@@ -13,7 +13,7 @@
 <h2>Admin</h2>
 
 <p>
-    <a href="{{ url('organisations/import')}}">Import organisations</a>
+    <a href="{{ url('import/organisations')}}">Import organisations</a>
 </p>
 
 @stop

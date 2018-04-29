@@ -11,9 +11,8 @@ Route::get('/', function () {
 Route::resource('organisations', 'OrganisationController');
 
 // routes for Laravel-Excel import
-Route::get('organisations/import', 'ImportController@org_form');
-//Route::get('organisations/import', 'ImportController@index'); // show the form
-Route::post('organisations/import', 'ImportController@organisations');
+Route::get('import/organisations', 'ImportController@org_form');
+Route::post('import/organisations', 'ImportController@organisations');
 
 // route for search
 // this should really be in API routes...?
