@@ -7,7 +7,7 @@
 @section('content')
     <h1>Import Organisations</h1>
 
-    <form action="{{url('import/organisations')}}" method="post" enctype="multipart/form-data">
+    <form action="{{url('organisations/import')}}" method="post" enctype="multipart/form-data">
       {{csrf_field()}}
       <div class="form-group">
         <input type="file" class="form-control" name="imported-file"/>
