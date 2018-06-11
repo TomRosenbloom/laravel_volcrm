@@ -8,7 +8,7 @@
 
 <h2>Resources</h2>
 
-<p><a href="{{ url('organisations') }}">Organisations</a></p>
+<p><a href="{{ url('organisations') }}">Organisations list</a></p>
 
 @auth
     <h2>Admin</h2>
