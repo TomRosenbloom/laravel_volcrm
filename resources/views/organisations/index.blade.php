@@ -34,6 +34,13 @@
     box-shadow: none;
 }
 
+.closeDiv {
+    cursor: pointer;
+    float: right;
+    opacity: 0.5;
+    margin-top: 6px; <!-- not the right way to do this  -->
+}
+
 @endsection
 
 @section('content')

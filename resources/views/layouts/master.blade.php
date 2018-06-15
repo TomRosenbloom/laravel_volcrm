@@ -22,6 +22,8 @@
 
       @include('includes.navbar')
 
+      <div id='app'></div><!-- this is to silence the Vue cannot find error, until Iget round to using Vue -->
+
       <div role="main" class="container">
 
           @if(Request::is('/'))
@@ -38,7 +40,14 @@
 
       <!-- Scripts -->
       <script src="{{ asset('js/app.js') }}"></script>
-
+      <script>
+          $(function() {
+              // $(document).tooltip();
+              $(".closeDiv").click(function(){
+                  $(event.target).closest("div").remove();
+              });
+          });
+      </script>
       @stack('scripts')
 
       @yield('scripts')

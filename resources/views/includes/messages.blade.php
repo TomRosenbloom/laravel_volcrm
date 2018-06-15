@@ -7,8 +7,9 @@
 @endif
 
 @if(session('success'))
-    <div class="alert alert-success">
+    <div class="alert alert-success w-75">
         {{session('success')}}
+        <span class="closeDiv fa fa-times-circle fa-lg"></span>
     </div>
 @endif
 
