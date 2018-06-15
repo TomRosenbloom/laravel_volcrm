@@ -1,6 +1,6 @@
 <?php
 
-if ($url = env('CLEARDB_DATABASE_URL', false)) {
+if ($url = getenv('CLEARDB_DATABASE_URL', false)) {
     $parts = parse_url($url);
     $host = $parts["host"];
     $username = $parts["user"];
