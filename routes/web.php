@@ -4,10 +4,19 @@ use GuzzleHttp\Client;
 
 use App\Helpers\Postcode;
 
+
+// authentication routes
+Auth::routes();
+
+// static routes
 Route::get('/', function () {
     return view('index');
 });
+Route::get('/about', function () {
+    return view('about');
+});
 
+// organisation crud routes
 Route::resource('organisations', 'OrganisationController');
 
 // routes for Laravel-Excel import
@@ -31,8 +40,3 @@ Route::get('bar', function(){
     $postcode = new Postcode('EX4 2LG');
     echo $postcode->getAddr();
 });
-
-
-Auth::routes();
-
-Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
