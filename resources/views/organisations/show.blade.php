@@ -68,7 +68,9 @@
                 <dl class="row">
                     <dt class="col-sm-2">Income</dt>
                     <dd class="col-sm-10">
+                        @if(isset($organisation->income_band->textual))
                         {!!$organisation->income_band->textual!!}
+                        @endif
                     </dd>
                     <dt class="col-sm-2">Type(s)</dt>
                     <dd class="col-sm-10">
