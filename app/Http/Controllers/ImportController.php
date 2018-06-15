@@ -45,14 +45,17 @@ class ImportController extends Controller
                 $data = $data->toArray();
                 for($i=0;$i<count($data);$i++)
                 {
+                    unset($data[$i]['website']);
                     $data[$i]['user_id'] = Auth::id();
                     $data[$i]['income_band_id'] = '7'; // 'unknown'
                     $data[$i]['order_name'] = $OrgName::definiteArticle($data[$i]['name']);
                     $dataImported[] = $data[$i];
+
                 }
             }
             DB::table('organisations')->insert($dataImported);
         }
+        //return $data;
         return redirect('/organisations')->with('success', 'Imported ' . count($dataImported) . 'organisations');
     }
 
