@@ -40,3 +40,6 @@ Route::get('bar', function(){
     $postcode = new Postcode('EX4 2LG');
     echo $postcode->getAddr();
 });
+
+// still need this route and other dashboard components, just for confirmation of registration
+Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
