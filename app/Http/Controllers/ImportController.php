@@ -49,6 +49,7 @@ class ImportController extends Controller
                     $data[$i]['user_id'] = Auth::id();
                     $data[$i]['income_band_id'] = '7'; // 'unknown'
                     $data[$i]['order_name'] = $OrgName::definiteArticle($data[$i]['name']);
+                    if(empty($data[$i]['postcode'])){ $data[$i]['postcode'] = ''; }
                     $dataImported[] = $data[$i];
 
                 }
