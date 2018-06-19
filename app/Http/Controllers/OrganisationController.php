@@ -265,7 +265,7 @@ class OrganisationController extends Controller
         $page = $paginationPage->getPaginationPage();
 
         Log::info('Updated organisation, id ' . $id);
-        Log::channel('slack')->critical('Something happened!');
+        Log::channel('slack')->critical('Updated organisation, id ' . $id);
 
         return redirect()->route('organisations.index',['page'=>$page])->with('success', 'Updated organisation ' . $organisation->name);
     }

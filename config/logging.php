@@ -27,6 +27,7 @@ return [
     | Available Drivers: "single", "daily", "slack", "syslog",
     |                    "errorlog", "custom", "stack"
     |
+    |
     */
 
     'channels' => [
