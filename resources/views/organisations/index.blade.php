@@ -10,37 +10,6 @@
 
 @section('styles')
 
-.hidden {
-    display: none;
-}
-
-.search-container {
-    display: inline-block;
-    position: relative;
-}
-
-.form-control-clear {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 12px;
-    color: lightgrey;
-    z-index: 10;
-    pointer-events: auto;
-    cursor: pointer;
-}
-
-.search-input {
-    box-shadow: none;
-}
-
-.closeDiv {
-    cursor: pointer;
-    float: right;
-    opacity: 0.5;
-    margin-top: 6px; <!-- not the right way to do this  -->
-}
-
 @endsection
 
 @section('content')

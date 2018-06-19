@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 use App\Organisation;
 use App\Address;
@@ -52,7 +53,6 @@ class OrganisationController extends Controller
         } else {
             $organisations = Organisation::orderBy('order_name','asc')->paginate($this->resultsPerPage);
         }
-
 
         $paginationPageContract->setPaginationPage($organisations->currentPage());
 
@@ -138,7 +138,6 @@ class OrganisationController extends Controller
      */
     public function store(Request $request, OrgName $OrgName)
     {
-
         $this->validate($request, [
             'name' => 'required',
             'postcode' => 'required'
@@ -173,6 +172,8 @@ class OrganisationController extends Controller
             }
         }
         $organisation->organisation_types()->attach($attach_data);
+
+        Log::info('Stored new organisation, id ' . $organisation->so_id);
 
         return redirect('/organisations')->with('success', 'Added organisation ' . $organisation->name);
     }
@@ -262,6 +263,9 @@ class OrganisationController extends Controller
         $organisation->organisation_types()->sync($sync_data);
 
         $page = $paginationPage->getPaginationPage();
+
+        Log::info('Updated organisation, id ' . $id);
+        Log::channel('slack')->critical('Something happened!');
 
         return redirect()->route('organisations.index',['page'=>$page])->with('success', 'Updated organisation ' . $organisation->name);
     }
