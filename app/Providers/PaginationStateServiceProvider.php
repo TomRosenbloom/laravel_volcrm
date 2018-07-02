@@ -3,9 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Helpers\PaginationPage;
+use App\Helpers\PaginationState;
 
-class PaginationPageServiceProvider extends ServiceProvider
+class PaginationStateServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap services.
@@ -24,9 +24,9 @@ class PaginationPageServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Helpers\Contracts\PaginationPageContract', function(){
+        $this->app->bind('App\Helpers\Contracts\PaginationStateContract', function(){
 
-            return new PaginationPage();
+            return new PaginationState();
 
         });
     }

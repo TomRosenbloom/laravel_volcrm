@@ -13,7 +13,7 @@ use App\IncomeBand;
 use App\OrganisationType;
 use App\City;
 
-use App\Helpers\Contracts\PaginationPageContract;
+use App\Helpers\Contracts\PaginationStateContract;
 use App\Helpers\OrgName;
 
 use GuzzleHttp\Exception\GuzzleException;
@@ -44,10 +44,13 @@ class OrganisationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, PaginationPageContract $paginationPageContract)
+    public function index(Request $request, PaginationStateContract $paginationState)
     {
         if($request->input('num_items') !== null){ // a conditional - that's a bad sign!
             $this->resultsPerPage = $request->input('num_items');
+            $paginationState->setPaginationItemsPerPage($this->resultsPerPage);
+        } else {
+            $this->resultsPerPage = $paginationState->getPaginationItemsPerPage();
         }
 
         if($request->input('search_terms')){ // another one!
@@ -56,7 +59,7 @@ class OrganisationController extends Controller
             $organisations = Organisation::orderBy('order_name','asc')->paginate($this->resultsPerPage);
         }
 
-        $paginationPageContract->setPaginationPage($organisations->currentPage());
+        $paginationState->setPaginationPage($organisations->currentPage());
 
         return view('organisations.index')->with([
             'organisations' => $organisations,
@@ -235,7 +238,7 @@ class OrganisationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id, PaginationPageContract $paginationPage, OrgName $OrgName)
+    public function update(Request $request, $id, PaginationStateContract $paginationState, OrgName $OrgName)
     {
         $this->validate($request, [
             'name' => 'required',
@@ -268,7 +271,7 @@ class OrganisationController extends Controller
         }
         $organisation->organisation_types()->sync($sync_data);
 
-        $page = $paginationPage->getPaginationPage();
+        $page = $paginationState->getPaginationPage();
 
         Log::info('Updated organisation, id ' . $id);
         Log::channel('slack')->critical('Updated organisation, id ' . $id);
@@ -282,7 +285,7 @@ class OrganisationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, PaginationPageContract $paginationPage)
+    public function destroy($id, PaginationStateContract $paginationState)
     {
         $organisation = Organisation::find($id);
         $organisation->delete();
@@ -292,7 +295,7 @@ class OrganisationController extends Controller
         // (that assumes we got here from the index page...)
         // return to that page unless the deletion has reduced the number of pages
         // so maybe, if page doesn't exist, go to the last page?
-        $page = $paginationPage->getPaginationPage();
+        $page = $paginationState->getPaginationPage();
         if($page > $this->numPages){
             $page = $this->numPages;
         }

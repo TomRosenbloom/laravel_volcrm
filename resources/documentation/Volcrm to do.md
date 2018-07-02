@@ -4,6 +4,8 @@ Create email alerts to self to log activity i.e. any admin registrations or logi
 
 Go to correct page of pagination after *adding* an org
 
+Also, a bug: doesn't remember choice of 'items per page'.
+
 Correct way to add js - compiling to app.js (as per css)
 
 Anonymise data? Should be ok as it is just public contact data, but just to be on safe side... 
