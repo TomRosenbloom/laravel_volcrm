@@ -28,4 +28,6 @@ CC API
 
 Think I might be heading towards this. In OrganisationController->create() I have been debating myself about how best to for e.g. get all cities to pass to the view to populate drop down. Previously I instantiated City, then did query in controller to create a $all_cities var then pass that to the view using view()->with(). Then I tried just directly assigning the query to the view, doing the query in the with array assignments. This saves a possibly pointless var assignment, but I think whatever you do it's wrong to have queries in the controller at all, so next thing is to have a getter method like getForSelect() in the City model, which is where  I'm at now, but... this method is going to be replicated in many models, so is the eventual solution to have a generic sort of controller for these types of objects - and that is where I think we get to repository pattern... 
 
-Should getForSelect be static to avoid a pointless object instantiation?
+Should getForSelect be static to avoid a pointless object instantiation? Yes. 
+
+This all makes perfect sense for getForSelect, but not so much for getAll, where I just seem to adding unnecessary steps i.e. because all my getAll does is call self::all(). 

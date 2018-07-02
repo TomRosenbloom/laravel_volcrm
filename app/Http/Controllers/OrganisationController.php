@@ -211,21 +211,20 @@ class OrganisationController extends Controller
     public function edit($id)
     {
         $organisation = Organisation::find($id);
-
         $address = $organisation->getDefaultAddress();
-
-        $income_bands = IncomeBand::all()->pluck('textual');
-
-        $organisation_types = OrganisationType::all();
-
         $this_org_types = $organisation->organisation_types()->get();
+
+        $income_bands = IncomeBand::getForSelect();
+        $organisation_types = OrganisationType::getAll();
+        $cities = City::getForSelect();
 
         return view('organisations.edit')->with([
             'organisation'=>$organisation,
             'address'=>$address,
             'income_bands'=>$income_bands,
             'organisation_types'=>$organisation_types,
-            'this_org_types'=>$this_org_types
+            'this_org_types'=>$this_org_types,
+            'cities'=>$cities
         ]);
     }
 
