@@ -121,13 +121,19 @@ class OrganisationController extends Controller
     {
         $organisation = new Organisation; // empty instance to prevent 'non-oject' error in form conditional
         $address = new Address; // ditto. NB you can do conditionals in the form, but that is a serious PITA
+        $income_bands = IncomeBand::getForSelect(); // this is good...
+        $organisation_types = OrganisationType::getAll(); // but this seems silly?
+        $cities = City::getForSelect();
 
+        // this way of more directly getting income bands, org types and cities is
+        // in a way neater, but I think thingslike City::pluck('name','id')->toArray()
+        // ought to be moved into a getter in the model - ?
         return view('organisations.create')->with([
             'organisation'=>$organisation,
             'address'=>$address,
-            'income_bands'=>IncomeBand::all()->pluck('textual'),
-            'organisation_types'=>OrganisationType::all(),
-            'cities'=>City::pluck('name','id')->toArray(),
+            'income_bands'=>$income_bands,
+            'organisation_types'=>$organisation_types,
+            'cities'=>$cities,
         ]);
     }
 

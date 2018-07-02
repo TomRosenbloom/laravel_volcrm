@@ -15,4 +15,7 @@ class City extends Model
         return $this->hasMany('App\Address');
     }
 
+    public static function getForSelect(){
+        return self::pluck('name','id')->toArray();
+    }
 }

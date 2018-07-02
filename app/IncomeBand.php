@@ -9,4 +9,8 @@ class IncomeBand extends Model
     public function organisations(){
         return $this->hasMany('App\Organisation');
     }
+
+    public static function getForSelect(){
+        return self::all()->pluck('textual');
+    }
 }
