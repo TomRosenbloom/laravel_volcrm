@@ -3,7 +3,7 @@
         {{Form::label('name', 'Name')}}
         {{Form::text('name', $organisation->name, ['class'=>'form-control', 'placeholder'=>'Organisation', 'autocomplete' => 'no'])}}
         <div id="matches">
-            
+
         </div>
     </div>
 </div>
@@ -31,8 +31,8 @@
 </div>
 <div class="form-row">
     <div class="form-group col-md-4">
-        {{Form::label('city', 'Town or city')}}
-        {{Form::text('city', $address->city, ['class'=>'form-control', 'placeholder'=>'City'])}}
+        {{Form::label('city', 'City')}}
+        {{Form::select('city', $cities, $address->city, ['class'=>'form-control', 'placeholder'=>'Select a city'])}}
     </div>
     <div class="form-group col-md-2">
         {{Form::label('postcode', 'Postcode')}}

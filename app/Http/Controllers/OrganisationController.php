@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 use App\Organisation;
 use App\Address;
 use App\IncomeBand;
 use App\OrganisationType;
+use App\City;
 
 use App\Helpers\Contracts\PaginationPageContract;
 use App\Helpers\OrgName;
@@ -117,16 +119,15 @@ class OrganisationController extends Controller
      */
     public function create()
     {
-
-        $income_bands = IncomeBand::all()->pluck('textual');
-        $organisation_types = OrganisationType::all();
         $organisation = new Organisation; // empty instance to prevent 'non-oject' error in form conditional
         $address = new Address; // ditto. NB you can do conditionals in the form, but that is a serious PITA
+
         return view('organisations.create')->with([
             'organisation'=>$organisation,
             'address'=>$address,
-            'income_bands'=>$income_bands,
-            'organisation_types'=>$organisation_types
+            'income_bands'=>IncomeBand::all()->pluck('textual'),
+            'organisation_types'=>OrganisationType::all(),
+            'cities'=>City::pluck('name','id')->toArray(),
         ]);
     }
 
