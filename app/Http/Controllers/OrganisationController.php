@@ -146,7 +146,7 @@ class OrganisationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, OrgName $OrgName)
+    public function store(Request $request, OrgName $OrgName,  PaginationStateContract $paginationState)
     {
         $this->validate($request, [
             'name' => 'required',
@@ -185,7 +185,12 @@ class OrganisationController extends Controller
 
         Log::info('Stored new organisation, id ' . $organisation->so_id);
 
-        return redirect('/organisations')->with('success', 'Added organisation ' . $organisation->name);
+        // get pagination page of added object
+        $page = $paginationState->calculatePaginationPage($organisation, 'order_name', $organisation->order_name);
+        Log::debug('pagination page after add ' . $page);
+
+        return redirect()->route('organisations.index',['page'=>$page])->with('success', 'Added organisation ' . $organisation->name);
+
     }
 
     /**

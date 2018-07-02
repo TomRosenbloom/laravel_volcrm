@@ -12,4 +12,6 @@ Interface PaginationStateContract
     public function setPaginationItemsPerPage($number);
 
     public function getPaginationItemsPerPage();
+
+    public function calculatePaginationPage($model_name, $order_field, $order_value);
 }
