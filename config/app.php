@@ -155,7 +155,6 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Unisharp\Ckeditor\ServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -225,7 +224,6 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'OrgName' => App\Helpers\OrgName::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ],
 
 ];

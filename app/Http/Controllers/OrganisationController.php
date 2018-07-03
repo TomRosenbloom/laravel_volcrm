@@ -49,7 +49,7 @@ class OrganisationController extends Controller
     public function index(Request $request, PaginationStateContract $paginationState)
     {
 
-        Debugbar::info('hello');
+        Debugbar::info('Hello');
 
         if($request->input('num_items') !== null){ // if user specified number of items per page
             // store the value in session, to persist it through any POST requests
