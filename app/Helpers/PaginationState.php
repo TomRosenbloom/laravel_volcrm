@@ -4,6 +4,7 @@ namespace app\Helpers;
 
 use App\Helpers\Contracts\PaginationStateContract;
 
+use Illuminate\Support\Facades\Log;
 
 class PaginationState implements PaginationStateContract
 {
@@ -59,12 +60,13 @@ class PaginationState implements PaginationStateContract
         // given the model, we can get total number of items
         // we can get items per page from self
         // we need to get the position of this item in model->all ordered by order_field with order_value
-        $collection = $model::orderBy('order_name','asc')->get();
+        $collection = $model::orderBy($order_field,'asc')->get();
         //$key = array_search($order_value, $collection->map->$order_field->toArray());
-        $key = array_search('Zebra Club', $collection->map->order_name->toArray());
+        $key = array_search($order_value, $collection->map->$order_field->toArray());
         $itemsPerPage = $this->getPaginationItemsPerPage();
+        // this calculation not quite right e.g. per page 6, items 75 gives 12, should be 13
+        Log::debug('per page: ' . $itemsPerPage . ' key ' . $key);
         return floor($key/$itemsPerPage);
-        // works in so far as a value is returned for $key, but is incorrect e.g. 66 instead of 11
     }
 
 }

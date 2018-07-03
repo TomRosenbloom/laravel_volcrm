@@ -16,6 +16,8 @@ use App\City;
 use App\Helpers\Contracts\PaginationStateContract;
 use App\Helpers\OrgName;
 
+use Debugbar;
+
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
@@ -46,19 +48,27 @@ class OrganisationController extends Controller
      */
     public function index(Request $request, PaginationStateContract $paginationState)
     {
-        if($request->input('num_items') !== null){ // a conditional - that's a bad sign!
+
+        Debugbar::info('hello');
+
+        if($request->input('num_items') !== null){ // if user specified number of items per page
+            // store the value in session, to persist it through any POST requests
             $this->resultsPerPage = $request->input('num_items');
             $paginationState->setPaginationItemsPerPage($this->resultsPerPage);
         } else {
+            // otherwise retrieve current value from session (or use default)
             $this->resultsPerPage = $paginationState->getPaginationItemsPerPage();
         }
 
-        if($request->input('search_terms')){ // another one!
+        if($request->input('search_terms')){ // if user used search form
+            // do the search, and paginate the results
             $organisations = Organisation::search($request->input('search_terms'))->paginate($this->resultsPerPage);
         } else {
+            // otherwise get all results - wait a minute why is order by in here only??
             $organisations = Organisation::orderBy('order_name','asc')->paginate($this->resultsPerPage);
         }
 
+        // store current page of pagination, to persist it through any POST requests
         $paginationState->setPaginationPage($organisations->currentPage());
 
         return view('organisations.index')->with([
@@ -128,9 +138,6 @@ class OrganisationController extends Controller
         $organisation_types = OrganisationType::getAll(); // but this seems silly?
         $cities = City::getForSelect();
 
-        // this way of more directly getting income bands, org types and cities is
-        // in a way neater, but I think thingslike City::pluck('name','id')->toArray()
-        // ought to be moved into a getter in the model - ?
         return view('organisations.create')->with([
             'organisation'=>$organisation,
             'address'=>$address,
