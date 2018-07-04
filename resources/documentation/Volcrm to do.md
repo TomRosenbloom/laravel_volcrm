@@ -1,5 +1,9 @@
 # Volcrm to do
 
+## Bugs
+
+Why are there multiple entries for some orgs in table? Circa 40 in organisations/index, but nearer 80 in the table... The duplicates are all test orgs so I think these are just development artefacts.
+
 ## Logging
 
 Create email alerts to self to log activity i.e. any admin registrations or logins and data changes so I can keep on top of the state of the data.
@@ -9,6 +13,8 @@ Create email alerts to self to log activity i.e. any admin registrations or logi
 - Go to correct page of pagination after *adding* an org
 
 - Remember choice of 'items per page'.
+- persist search across pagination links
+- et-bleeding-cetera
 
 So far my (working) solution has been to create my own PaginationState helper, which uses the session to store and retrieve pagination vars. Using the session is a reasonable thing to do I think - the general issue here is passing values through POST requests. That is, when you for e.g. just use pagination links they are GET requests so the page (and any number of items, if you are allowing this to be editable) can be passed in the url. But when you add or update an item there will be a POST somewhere along the way and you need to pass the pagination vars through this. A standard way of doing this is to use hidden fields etc. but I've never been keen on that and using the session seems a nicer alternative [I can see an obvious reason why this is not the case actually, if you are thinking RESTful then you want everything in the URL. Using the session is in this sense actually a bad idea].
 
@@ -24,6 +30,36 @@ What values might we want to persist?
 ...and we might want to calculate the current page for a new item added, based on current order, and items per page.
 
 
+
+just a minute, what is this - my search input is named 'search_terms' but when I use pagination links after search, I get 'query=' in the url. Where is that coming from?? It has to be from paginator object that is being used in view, like {{$organisations->links()}}
+
+This all gets v complicated. I don't understand why this is always such an issue (apparently) in MVC frameworks but doesn't seem properly dealt with anywhere. I must be being stupid in someway because no one else in the world seems to perceive this problem! 
+
+There's several different issues wrapped round each other here: first there is the issue of passing params with pagination links, e.g. search terms, items per page, then there's the issue of persisting params through POST requests, then there is the added complication of what Laravel is doing automatically behind the scenes. Oh and then there's the requirement that any links should be RESTful i.e. the persistence shouldn't rely on use of session vars.
+
+As far as passing params across pagination links goes, that *should* be easy to deal with - just add them to the query string.
+
+NB try searches for Laravel REST pagination/API pagination.
+
+Delving into the Laravel code I see that in AbstractPaginator $query is an array of 'paramaters to add to all URLs'. Then there is  function url() which creates the page link and in which an array of parameters is constructed. That array is initialised as [$this->pageName => $page], where pageName is by default 'page', then for every value of $this->query, a new array pair is added to $parameters. Finally the native function http_build_query is used to add each parameter pair to the url. There are further methods appends(), appendArray(), and addQuery() which between them construct $this->query. appends() and appendArray() both call addQuery(). appends() adds 'a set of query string values to the paginator', appendArray() adds 'an array of query string values'. The documentation describes how appends() can be used to customise the paginator links, but appendArray is not mentioned.
+
+Ok, so I got some success using appends() (in the view, note) to pass search terms and itemsPerPage through the pagination links, but here's the next problem: how to combine a search with (say) orderBy?
+
+When we use 
+
+```
+$organisations = Organisation::search($this->searchTerms)->paginate($this->resultsPerPage);
+```
+
+...we are using Laravel Scout query builder. If we try and shove an orderBy in there it simply doesn't work:
+
+```
+$organisations = Organisation::search($this->searchTerms)->orderBy($this->orderBy)->paginate($this->resultsPerPage);
+```
+
+That's more the kind of thing we would do with Eloquent. Weirdly though this doesn't give an error, whereas we will get an error if we replace orderBy with some random nonsense. 
+
+Ahh but of course ordering doesn't make any sense for search results, which should be ordered by relevance...
 
 ## Assets
 

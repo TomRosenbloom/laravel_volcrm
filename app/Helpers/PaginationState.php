@@ -17,7 +17,7 @@ class PaginationState implements PaginationStateContract
      *
      * @param int $page pagination page number
      */
-    public function setPaginationPage($page)
+    public function storePaginationPage($page)
     {
         $this->paginationPage = $page;
         session(['paginationPage' => $this->paginationPage]);
@@ -27,7 +27,7 @@ class PaginationState implements PaginationStateContract
      * retrieve current pagination page number from session
      * @return int current page number
      */
-    public function getPaginationPage()
+    public function retrievePaginationPage()
     {
         return session('paginationPage');
     }
@@ -36,7 +36,7 @@ class PaginationState implements PaginationStateContract
      * store current items per page number in session
      * @param int $number number of items to show per page
      */
-    public function setPaginationItemsPerPage($number)
+    public function storePaginationItemsPerPage($number)
     {
         $this->paginationItemsPerPage = $number;
         session(['paginationItemsPerPage' => $this->paginationItemsPerPage]);
@@ -46,7 +46,7 @@ class PaginationState implements PaginationStateContract
      * retrieve current items per page number from session
      * @return int items per page
      */
-    public function getPaginationItemsPerPage()
+    public function retrievePaginationItemsPerPage()
     {
         if(session('paginationItemsPerPage')){
             return session('paginationItemsPerPage');

@@ -5,13 +5,13 @@ namespace App\Helpers\Contracts;
 Interface PaginationStateContract
 {
 
-    public function setPaginationPage($page);
+    public function storePaginationPage($page);
 
-    public function getPaginationPage();
+    public function retrievePaginationPage();
 
-    public function setPaginationItemsPerPage($number);
+    public function storePaginationItemsPerPage($number);
 
-    public function getPaginationItemsPerPage();
+    public function retrievePaginationItemsPerPage();
 
     public function calculatePaginationPage($model_name, $order_field, $order_value);
 }

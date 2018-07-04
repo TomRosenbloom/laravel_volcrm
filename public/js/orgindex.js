@@ -1,4 +1,4 @@
-$('#num_items').on('change', function(){
+$('#per_page').on('change', function(){
   $(this).parent('form').submit();
 });
 

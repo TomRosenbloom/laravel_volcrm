@@ -37,8 +37,8 @@
                 </div>
             </div>
 
-            {{Form::label('num_items', 'Show')}}
-            {{Form::Select('num_items', [4=>4,6=>6,10=>10,50=>50], $num_items, ['class'=>'form-control ml-1 mr-1'])}}
+            {{Form::label('per_page', 'Show')}}
+            {{Form::Select('per_page', [4=>4,6=>6,10=>10,50=>50], $per_page, ['class'=>'form-control ml-1 mr-1'])}}
 
             {!! Form::close() !!}
 
@@ -53,7 +53,10 @@
             </div>
         @endforeach
 
-        {{$organisations->links()}}
+        {{ $organisations->appends([
+            'search_terms' => $search_terms,
+            'per_page' => $per_page
+            ])->links() }}
 
         @if(Request::get('search_terms'))
             @include('includes.algolia')

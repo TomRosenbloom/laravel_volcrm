@@ -26,6 +26,9 @@ class OrganisationController extends Controller
     private $resultsPerPage = 4;
     private $numResults;
     private $numPages;
+    private $currentPage;
+    private $searchTerms;
+    private $orderBy = 'order_name';
 
     /**
      * Create a new controller instance.
@@ -38,6 +41,9 @@ class OrganisationController extends Controller
 
         $this->numResults = Organisation::count();
         $this->numPages = round($this->numResults/$this->resultsPerPage);
+        // think we can get these as properties of the paginator object
+        // note, numResults is used only to calculate numPages and
+        // numPages is only used after destroy to avoid empty last page of pagination
     }
 
 
@@ -48,34 +54,30 @@ class OrganisationController extends Controller
      */
     public function index(Request $request, PaginationStateContract $paginationState)
     {
-
-        Debugbar::info('Hello');
-
-        if($request->input('num_items') !== null){ // if user specified number of items per page
-            // store the value in session, to persist it through any POST requests
-            $this->resultsPerPage = $request->input('num_items');
-            $paginationState->setPaginationItemsPerPage($this->resultsPerPage);
-        } else {
-            // otherwise retrieve current value from session (or use default)
-            $this->resultsPerPage = $paginationState->getPaginationItemsPerPage();
+        if($request->input('per_page')){
+            $this->resultsPerPage = $request->input('per_page');
+        }
+        if($request->input('orderBy')){
+            $this->resultsPerPage = $request->input('orderBy');
         }
 
-        if($request->input('search_terms')){ // if user used search form
-            // do the search, and paginate the results
-            $organisations = Organisation::search($request->input('search_terms'))->paginate($this->resultsPerPage);
+        if($request->input('search_terms')){
+            // if some search terms have been entered, then return (and paginate)
+            // a Laravel Scout builder object, which is ordered by relevance
+            $this->searchTerms = $request->input('search_terms');
+            $organisations = Organisation::search($this->searchTerms)->paginate($this->resultsPerPage);
         } else {
-            // otherwise get all results - wait a minute why is order by in here only??
+            // if there is an order specified, return a eloquent model ordered as required
+            // NB, logically, we do not combine searching with ordering!!
             $organisations = Organisation::orderBy('order_name','asc')->paginate($this->resultsPerPage);
         }
 
-        // store current page of pagination, to persist it through any POST requests
-        $paginationState->setPaginationPage($organisations->currentPage());
 
         return view('organisations.index')->with([
             'organisations' => $organisations,
             'page' => $organisations->currentPage(),
-            'num_items' => $this->resultsPerPage,
-            'search_terms' => ''
+            'per_page' => $this->resultsPerPage,
+            'search_terms' => $this->searchTerms
         ]);
     }
 
@@ -283,7 +285,7 @@ class OrganisationController extends Controller
         }
         $organisation->organisation_types()->sync($sync_data);
 
-        $page = $paginationState->getPaginationPage();
+        $page = $paginationState->retrievePaginationPage();
 
         Log::info('Updated organisation, id ' . $id);
         Log::channel('slack')->critical('Updated organisation, id ' . $id);
@@ -307,7 +309,7 @@ class OrganisationController extends Controller
         // (that assumes we got here from the index page...)
         // return to that page unless the deletion has reduced the number of pages
         // so maybe, if page doesn't exist, go to the last page?
-        $page = $paginationState->getPaginationPage();
+        $page = $paginationState->retrievePaginationPage();
         if($page > $this->numPages){
             $page = $this->numPages;
         }
