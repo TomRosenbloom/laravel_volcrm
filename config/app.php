@@ -6,7 +6,7 @@ return [
     /*
     error log, for Heroku
      */
-    'log' => 'errorlog',
+    'log' => env('APP_LOG', 'errorlog'),
 
     /*
     |--------------------------------------------------------------------------
