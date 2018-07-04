@@ -2,7 +2,9 @@
 
 ## Bugs
 
-Why are there multiple entries for some orgs in table? Circa 40 in organisations/index, but nearer 80 in the table... The duplicates are all test orgs so I think these are just development artefacts? no wait, they are now visible again... Don't know what that was about...
+Algolia index needs to be (1) rebuilt for live deployment (2) kept roughly in sync between live and dev
+
+Problem with logging in Heroku deployment
 
 ## Logging
 
@@ -67,6 +69,8 @@ First a recap - when either the search form or the items-per-page form is used (
 
 Note also want to remember items per page when clicking on Organisations link in nav bar, and potentially other situations where we might go v far from index list then return - so session must be the way to go?? As far as being RESTful is concerned I suppose you can add to URL from session? Anyway there's literally no other way you can keep hold of a preference like items per page (in fact that particular one could better be preserved in a cookie - although I think it doesn't make much difference with how browsers handle sessions/cookies these days).
 
+So maybe my pagination state helper is correct after all. 
+
 ## Confirmation message
 
 'showing x to y of z results' etc.
@@ -88,6 +92,8 @@ Volunteer profiles, with skill/activity categories & travel range:
 - logic for calculating 'postcodes in range of postcode' - where should that go? In my existing Postcode helper?
 
 ### CC API
+
+Refer back to email about this and add functionality to look up/cross check orgs in CC API
 
 ## Tests
 
