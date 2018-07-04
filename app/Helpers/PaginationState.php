@@ -6,6 +6,8 @@ use App\Helpers\Contracts\PaginationStateContract;
 
 use Illuminate\Support\Facades\Log;
 
+use Debugbar;
+
 class PaginationState implements PaginationStateContract
 {
 
@@ -55,6 +57,14 @@ class PaginationState implements PaginationStateContract
         }
     }
 
+    /**
+     * work out what page of pagination we should be on, given existing pagination params
+     *
+     * @param  model $model       the model that is subject of the paginated listing
+     * @param  string $order_field name of the field to order collection on
+     * @param  string $order_value value of order field for current item
+     * @return int     pagination page number
+     */
     public function calculatePaginationPage($model, $order_field, $order_value)
     {
         // given the model, we can get total number of items
@@ -63,10 +73,12 @@ class PaginationState implements PaginationStateContract
         $collection = $model::orderBy($order_field,'asc')->get();
         //$key = array_search($order_value, $collection->map->$order_field->toArray());
         $key = array_search($order_value, $collection->map->$order_field->toArray());
-        $itemsPerPage = $this->getPaginationItemsPerPage();
+        $itemsPerPage = $this->retrievePaginationItemsPerPage();
         // this calculation not quite right e.g. per page 6, items 75 gives 12, should be 13
-        Log::debug('per page: ' . $itemsPerPage . ' key ' . $key);
-        return floor($key/$itemsPerPage);
+        Debugbar::debug('per page: ' . $itemsPerPage . ' key ' . $key);
+        $page = floor($key/$itemsPerPage)+1;
+        Debugbar::info('page ' . $page);
+        //return $page;
     }
 
 }

@@ -2,7 +2,7 @@
 
 ## Bugs
 
-Why are there multiple entries for some orgs in table? Circa 40 in organisations/index, but nearer 80 in the table... The duplicates are all test orgs so I think these are just development artefacts.
+Why are there multiple entries for some orgs in table? Circa 40 in organisations/index, but nearer 80 in the table... The duplicates are all test orgs so I think these are just development artefacts? no wait, they are now visible again... Don't know what that was about...
 
 ## Logging
 
@@ -59,7 +59,17 @@ $organisations = Organisation::search($this->searchTerms)->orderBy($this->orderB
 
 That's more the kind of thing we would do with Eloquent. Weirdly though this doesn't give an error, whereas we will get an error if we replace orderBy with some random nonsense. 
 
-Ahh but of course ordering doesn't make any sense for search results, which should be ordered by relevance...
+Ahh but of course ordering doesn't make any sense for search results, which should be ordered by relevance... NB it *would* make sense if we used a filter rather than a search
+
+Right so I have sorted out how to pass params in pagination links, now how to remember them through POST requests...
+
+First a recap - when either the search form or the items-per-page form is used (and potentially in future when orderBy or filters say are added) the controller index method picks these up from POST data, then uses them to create paginator object, then returns them (with paginator object) to view where they are added to the paginator links. On a first visit to the index page, there are no params obvs, but they appear as soon as you use a pagination link.
+
+Note also want to remember items per page when clicking on Organisations link in nav bar, and potentially other situations where we might go v far from index list then return - so session must be the way to go?? As far as being RESTful is concerned I suppose you can add to URL from session? Anyway there's literally no other way you can keep hold of a preference like items per page (in fact that particular one could better be preserved in a cookie - although I think it doesn't make much difference with how browsers handle sessions/cookies these days).
+
+## Confirmation message
+
+'showing x to y of z results' etc.
 
 ## Assets
 

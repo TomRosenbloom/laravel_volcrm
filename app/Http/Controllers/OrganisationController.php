@@ -26,7 +26,7 @@ class OrganisationController extends Controller
     private $resultsPerPage = 4;
     private $numResults;
     private $numPages;
-    private $currentPage;
+    //private $currentPage; // do we need this as a property?
     private $searchTerms;
     private $orderBy = 'order_name';
 
@@ -54,28 +54,36 @@ class OrganisationController extends Controller
      */
     public function index(Request $request, PaginationStateContract $paginationState)
     {
+        // set and store, or retrieve number of items per page
         if($request->input('per_page')){
             $this->resultsPerPage = $request->input('per_page');
+            $paginationState->storePaginationItemsPerPage($this->resultsPerPage);
+        } else {
+            $this->resultsPerPage = $paginationState->retrievePaginationItemsPerPage();
         }
-        if($request->input('orderBy')){
-            $this->resultsPerPage = $request->input('orderBy');
-        }
+
+        // if($request->input('orderBy')){
+        //     $this->resultsPerPage = $request->input('orderBy');
+        // }
+
 
         if($request->input('search_terms')){
             // if some search terms have been entered, then return (and paginate)
             // a Laravel Scout builder object, which is ordered by relevance
             $this->searchTerms = $request->input('search_terms');
-            $organisations = Organisation::search($this->searchTerms)->paginate($this->resultsPerPage);
+            $paginator = Organisation::search($this->searchTerms)->paginate($this->resultsPerPage);
         } else {
             // if there is an order specified, return a eloquent model ordered as required
             // NB, logically, we do not combine searching with ordering!!
-            $organisations = Organisation::orderBy('order_name','asc')->paginate($this->resultsPerPage);
+            $paginator = Organisation::orderBy('order_name','asc')->paginate($this->resultsPerPage);
         }
 
+        // store current page of pagination
+        $paginationState->storePaginationPage($paginator->currentPage());
 
         return view('organisations.index')->with([
-            'organisations' => $organisations,
-            'page' => $organisations->currentPage(),
+            'organisations' => $paginator,
+            'page' => $paginator->currentPage(),
             'per_page' => $this->resultsPerPage,
             'search_terms' => $this->searchTerms
         ]);
@@ -104,26 +112,6 @@ class OrganisationController extends Controller
         }
 
         return Response($output);
-    }
-
-
-    public function ccImport()
-    {
-        // come back to this when I get the API key
-
-        $client = new Client();
-        $res = $client->request('POST', 'https://url_to_the_api', [
-            'form_params' => [
-                'client_id' => 'test_id',
-                'secret' => 'test_secret',
-            ]
-        ]);
-        echo $res->getStatusCode();
-        // "200"
-        echo $res->getHeader('content-type');
-        // 'application/json; charset=utf8'
-        echo $res->getBody();
-        // {"type":"User"...'
     }
 
 
@@ -196,7 +184,6 @@ class OrganisationController extends Controller
 
         // get pagination page of added object
         $page = $paginationState->calculatePaginationPage($organisation, 'order_name', $organisation->order_name);
-        Log::debug('pagination page after add ' . $page);
 
         return redirect()->route('organisations.index',['page'=>$page])->with('success', 'Added organisation ' . $organisation->name);
 
@@ -285,6 +272,7 @@ class OrganisationController extends Controller
         }
         $organisation->organisation_types()->sync($sync_data);
 
+        // retrieve pagination page we left from
         $page = $paginationState->retrievePaginationPage();
 
         Log::info('Updated organisation, id ' . $id);
@@ -314,8 +302,32 @@ class OrganisationController extends Controller
             $page = $this->numPages;
         }
 
-        //return redirect('/organisations')->with('success', 'Deleted organisation ' . $organisation->name);
         return redirect()->route('organisations.index',['page'=>$page])->with('success', 'Deleted organisation ' . $organisation->name);
 
+    }
+
+
+    /**
+     * get org details from Charity Commission API
+     *
+     * @return [type] [description]
+     */
+    public function ccImport()
+    {
+        // come back to this when I get the API key
+
+        $client = new Client();
+        $res = $client->request('POST', 'https://url_to_the_api', [
+            'form_params' => [
+                'client_id' => 'test_id',
+                'secret' => 'test_secret',
+            ]
+        ]);
+        echo $res->getStatusCode();
+        // "200"
+        echo $res->getHeader('content-type');
+        // 'application/json; charset=utf8'
+        echo $res->getBody();
+        // {"type":"User"...'
     }
 }
