@@ -2,9 +2,9 @@
 
 ## Bugs
 
-Algolia index needs to be (1) rebuilt for live deployment (2) kept roughly in sync between live and dev
+Algolia index needs to be (1) rebuilt for live deployment (2) kept roughly in sync between live and dev. Tried directly uploading csv but this has just fucked it more because I suppose there is a mismatch between the index and the db, so it could return 100 results, but there are only 10 properly corresponding items in the index. So I'm going to have to write a script to build the index programmatically... I can see why this hasn't worked - my local csv has pipe as separator not comma. Actually, rebuilding the index was easy, you just use artisan command, however it still doesn't work in prod, presumable because of mismatch between erm... Anyway, as a temporary fix, I ran the same Artisan command *php artisan scout:import "App\Organisation"* from Heroku bash. Not ideal because we now have a double index, but at least it produces convincing looking results.
 
-Problem with logging in Heroku deployment
+Problem with logging in Heroku deployment - this was "Curl error (code 3): <url> malformed" when performing an action that was logged to Slack, and the solution was to set Heroku config var LOG_SLACK_WEBHOOK_URL to the correct value as per what is in .env file. But I don't understand how this problem was arising because as far as I can see the production deployment shouldn't be using Slack, as per the settings in config/logging.php. Will be interesting to see if I do now get logging to Slack from the Heroku deployment.
 
 ## Logging
 
@@ -74,6 +74,18 @@ So maybe my pagination state helper is correct after all.
 ## Confirmation message
 
 'showing x to y of z results' etc.
+
+## Filters
+
+For e.g. by city, by income band
+
+## Search
+
+Text search is working mostly ok, but there are some problems:
+
+Not searching postcode, though it is searching on aims and activities. However that can lead to confusion because the aims and activities are not shown in the listing so you wouldn't necessarily know why some things have been included e.g. 'sheltered' finds Abbeyfield Society. Some weird results and broken pagination, e.g. search for 'EX'. I think this is caused by mismatch between the database and the search index (because the db orgs are different between local and prod, and the index covers both - actually can I just have two separate indexes for local/prod? That would be easier)
+
+OK, the solution to this is easy and mostly automatic: create two new indexes via Algolia dashboard called dev_organisation and prod_organisation (for e.g.) then in .env set SCOUT_PREFIX=dev_ and in the Heroku config vars add SCOUT_PREFIX with value prod_, then run php artisan scout:import "App\Organisation" both locally and via Heroku bash, and the two different indexes will be populated as required. V good.
 
 ## Assets
 
