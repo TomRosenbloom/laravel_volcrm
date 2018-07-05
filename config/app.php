@@ -3,10 +3,10 @@ use App\Helpers\OrgName;
 
 return [
 
-    /*
-    error log, for Heroku
-     */
-    'log' => env('APP_LOG', 'errorlog'),
+    // /*
+    // error log, for Heroku
+    //  */
+    // 'log' => env('APP_LOG', 'errorlog'),
 
     /*
     |--------------------------------------------------------------------------

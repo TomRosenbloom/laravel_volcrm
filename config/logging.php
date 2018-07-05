@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('LOG_CHANNEL', 'stack'),
+    'default' => env('LOG_CHANNEL', 'heroku'),
 
     /*
     |--------------------------------------------------------------------------
@@ -34,6 +34,10 @@ return [
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single','slack'],
+        ],
+        'heroku' => [
+            'driver' => 'stack',
+            'channel' => ['errorlog'],
         ],
 
         'single' => [
