@@ -19,6 +19,9 @@ Route::get('/about', function () {
 // organisation crud routes
 Route::resource('organisations', 'OrganisationController');
 
+// opportunity crud routes
+Route::resource('opportunities', 'OpportunityController');
+
 // routes for Laravel-Excel import
 Route::get('import/organisations', 'ImportController@org_form');
 Route::post('import/organisations', 'ImportController@organisations');

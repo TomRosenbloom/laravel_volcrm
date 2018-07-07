@@ -46,7 +46,7 @@ class Organisation extends Model
 
     /**
      * overide Scout method toSearchableArray to select specific cols to be added to search index
-     * 
+     *
      * @return array
      */
     public function toSearchableArray()

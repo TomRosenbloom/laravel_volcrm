@@ -2,9 +2,68 @@
 
 ## Bugs
 
-Algolia index needs to be (1) rebuilt for live deployment (2) kept roughly in sync between live and dev. Tried directly uploading csv but this has just fucked it more because I suppose there is a mismatch between the index and the db, so it could return 100 results, but there are only 10 properly corresponding items in the index. So I'm going to have to write a script to build the index programmatically... I can see why this hasn't worked - my local csv has pipe as separator not comma. Actually, rebuilding the index was easy, you just use artisan command, however it still doesn't work in prod, presumable because of mismatch between erm... Anyway, as a temporary fix, I ran the same Artisan command *php artisan scout:import "App\Organisation"* from Heroku bash. Not ideal because we now have a double index, but at least it produces convincing looking results.
 
-Problem with logging in Heroku deployment - this was "Curl error (code 3): <url> malformed" when performing an action that was logged to Slack, and the solution was to set Heroku config var LOG_SLACK_WEBHOOK_URL to the correct value as per what is in .env file. But I don't understand how this problem was arising because as far as I can see the production deployment shouldn't be using Slack, as per the settings in config/logging.php. Will be interesting to see if I do now get logging to Slack from the Heroku deployment.
+
+
+
+## Confirmation message
+
+'showing x to y of z results' etc.
+
+## Filters
+
+For e.g. by city, by income band
+
+## Search
+
+This is working pretty well, however, as postcode, aims and activities etc are included in search index they should be visible (with highlighting) in search results.
+
+## Assets
+
+Correct way to add js - compiling to app.js (as per css)
+
+## New functionality
+
+### Volunteers and opportunities
+
+Different user categories for Volunteer, Org User
+
+Volunteer profiles, with skill/activity categories & travel range:
+
+- volunteer table & model - Volunteer should extend and use existing authentication stuff
+- opportunity table & model - many to many with organisation
+- logic for calculating 'postcodes in range of postcode' - where should that go? In my existing Postcode helper?
+
+### CC API
+
+Refer back to email about this and add functionality to look up/cross check orgs in CC API
+
+## Tests
+
+Use TTD to add Opportunity components and functionality.
+
+How do I want this to work:
+
+- Opportunity model:
+  - get all opportunities
+  - get opportunities for postcode
+  - get opportunities within range, x miles of given postcode
+  - get opportunities for skill/activity
+  - get current opportunities for given Org
+- Opportunity controller/views
+  - form for adding opportunity
+
+## Code review
+
+SonarQube
+
+## Repository Pattern
+
+Think I might be heading towards this. In OrganisationController->create() I have been debating myself about how best to for e.g. get all cities to pass to the view to populate drop down. Previously I instantiated City, then did query in controller to create a $all_cities var then pass that to the view using view()->with(). Then I tried just directly assigning the query to the view, doing the query in the with array assignments. This saves a possibly pointless var assignment, but I think whatever you do it's wrong to have queries in the controller at all, so next thing is to have a getter method like getForSelect() in the City model, which is where  I'm at now, but... this method is going to be replicated in many models, so is the eventual solution to have a generic sort of controller for these types of objects - and that is where I think we get to repository pattern... 
+
+Should getForSelect be static to avoid a pointless object instantiation? Yes. 
+
+This all makes perfect sense for getForSelect, but not so much for getAll, where I just seem to adding unnecessary steps i.e. because all my getAll does is call self::all(). 
 
 ## Logging
 
@@ -13,7 +72,6 @@ Create email alerts to self to log activity i.e. any admin registrations or logi
 ## Pagination
 
 - Go to correct page of pagination after *adding* an org
-
 - Remember choice of 'items per page'.
 - persist search across pagination links
 - et-bleeding-cetera
@@ -70,57 +128,3 @@ First a recap - when either the search form or the items-per-page form is used (
 Note also want to remember items per page when clicking on Organisations link in nav bar, and potentially other situations where we might go v far from index list then return - so session must be the way to go?? As far as being RESTful is concerned I suppose you can add to URL from session? Anyway there's literally no other way you can keep hold of a preference like items per page (in fact that particular one could better be preserved in a cookie - although I think it doesn't make much difference with how browsers handle sessions/cookies these days).
 
 So maybe my pagination state helper is correct after all. 
-
-## Confirmation message
-
-'showing x to y of z results' etc.
-
-## Filters
-
-For e.g. by city, by income band
-
-## Search
-
-Text search is working mostly ok, but there are some problems:
-
-Not searching postcode, though it is searching on aims and activities. However that can lead to confusion because the aims and activities are not shown in the listing so you wouldn't necessarily know why some things have been included e.g. 'sheltered' finds Abbeyfield Society. Some weird results and broken pagination, e.g. search for 'EX'. I think this is caused by mismatch between the database and the search index (because the db orgs are different between local and prod, and the index covers both - actually can I just have two separate indexes for local/prod? That would be easier)
-
-OK, the solution to this is easy and mostly automatic: create two new indexes via Algolia dashboard called dev_organisation and prod_organisation (for e.g.) then in .env set SCOUT_PREFIX=dev_ and in the Heroku config vars add SCOUT_PREFIX with value prod_, then run php artisan scout:import "App\Organisation" both locally and via Heroku bash, and the two different indexes will be populated as required. V good.
-
-## Assets
-
-Correct way to add js - compiling to app.js (as per css)
-
-## New functionality
-
-### Volunteers and opportunities
-
-Different user categories for Volunteer, Org User
-
-Volunteer profiles, with skill/activity categories & travel range:
-
-- volunteer table & model - Volunteer should extend and use existing authentication stuff
-- opportunity table & model - many to many with organisation
-- logic for calculating 'postcodes in range of postcode' - where should that go? In my existing Postcode helper?
-
-### CC API
-
-Refer back to email about this and add functionality to look up/cross check orgs in CC API
-
-## Tests
-
-Phpunit
-
-Code review - SonarQube
-
-
-
-
-
-## Repository Pattern
-
-Think I might be heading towards this. In OrganisationController->create() I have been debating myself about how best to for e.g. get all cities to pass to the view to populate drop down. Previously I instantiated City, then did query in controller to create a $all_cities var then pass that to the view using view()->with(). Then I tried just directly assigning the query to the view, doing the query in the with array assignments. This saves a possibly pointless var assignment, but I think whatever you do it's wrong to have queries in the controller at all, so next thing is to have a getter method like getForSelect() in the City model, which is where  I'm at now, but... this method is going to be replicated in many models, so is the eventual solution to have a generic sort of controller for these types of objects - and that is where I think we get to repository pattern... 
-
-Should getForSelect be static to avoid a pointless object instantiation? Yes. 
-
-This all makes perfect sense for getForSelect, but not so much for getAll, where I just seem to adding unnecessary steps i.e. because all my getAll does is call self::all(). 

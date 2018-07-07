@@ -17,4 +17,18 @@ class MyTest extends TestCase
     {
         $this->assertTrue(true);
     }
+
+    /**
+     * test that create opportunity route exists and returns no error
+     *
+     * questions:
+     * how to deal with authentication barrier?
+     *
+     */
+    public function testCreateOpportunity()
+    {
+        $response = $this->get('/opportunities/create');
+
+        $response->assertStatus(200);
+    }
 }
