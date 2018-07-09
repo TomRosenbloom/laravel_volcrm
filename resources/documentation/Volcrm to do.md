@@ -53,6 +53,8 @@ How do I want this to work:
 - Opportunity controller/views
   - form for adding opportunity
 
+NB to run test have to type .\vendor\bin\phpunit at command prompt (in project dir).
+
 ## Code review
 
 SonarQube
